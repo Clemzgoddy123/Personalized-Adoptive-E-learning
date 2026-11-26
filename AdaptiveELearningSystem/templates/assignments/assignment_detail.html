@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}{{ assignment.title }}{% endblock %}
+{% block content %}
+<h2>{{ assignment.title }}</h2>
+<p><strong>Course:</strong> <a href="/courses/{{ assignment.course.id }}/">{{ assignment.course.title }}</a></p>
+<p><strong>Deadline:</strong> {{ assignment.deadline|date:'Y-m-d H:i' }}</p>
+<p><strong>Maximum Score:</strong> {{ assignment.max_score }}</p>
+<p>{{ assignment.description }}</p>
+<h4 class="mt-4">Submissions</h4>
+{% if submissions %}
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Student</th><th>Submitted</th><th>Submission</th><th>Score</th><th>Feedback</th></tr>
+        </thead>
+        <tbody>
+            {% for submission in submissions %}
+                <tr>
+                    <td>{{ submission.student.user.get_full_name|default:submission.student.user.username }}</td>
+                    <td>{{ submission.submission_date|date:'Y-m-d H:i' }}</td>
+                    <td>
+                        {% if submission.submission_file %}
+                            Submitted file available
+                        {% else %}
+                            No file submitted
+                        {% endif %}
+                    </td>
+                    <td>
+                        {{ submission.score|default:'Pending' }}<br>
+                        <a href="{% url 'download_submission_score' submission.id %}" class="btn btn-sm btn-outline-primary mt-1">Download Score</a>
+                        {% if request.user.is_authenticated and submission.assignment.course.teacher.user.id == request.user.id %}
+                            <br>
+                            <a href="{% url 'grade_submission' submission.id %}" class="btn btn-sm btn-primary mt-1">Grade</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ submission.feedback|default:'No feedback yet' }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">No submissions yet.</div>
+{% endif %}
+<a href="/assignments/{{ assignment.id }}/submit/" class="btn btn-success mt-3">Submit Assignment</a>
+{% endblock %}

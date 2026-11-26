@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+
+{% block title %}Reports{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="display-6">Reports</h1>
+            <p class="text-muted">Student performance snapshots and teacher decision support information.</p>
+        </div>
+    </div>
+
+    {% if teacher_report %}
+    <div class="card p-4 mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <h5 class="mb-1">Decision support</h5>
+                <p class="text-muted mb-0">Track student progress across your courses and identify who needs attention.</p>
+            </div>
+            <span class="badge rounded-pill bg-warning text-dark">Needs attention: {{ teacher_report.summary.needs_attention }}</span>
+        </div>
+
+        <div class="mb-3">
+            <strong>Courses:</strong>
+            {% for course in teacher_report.courses %}
+                <span class="badge rounded-pill bg-light text-dark me-2">{{ course.title }}</span>
+            {% empty %}
+                <span class="text-muted">No courses assigned.</span>
+            {% endfor %}
+        </div>
+
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Avg quiz</th>
+                        <th>Avg assignment</th>
+                        <th>Attendance</th>
+                        <th>Material completion</th>
+                        <th>Signals</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in teacher_report.students %}
+                        <tr>
+                            <td>
+                                <div class="fw-semibold">{{ row.student.user.get_full_name|default:row.student.user.username }}</div>
+                                <div class="text-muted small">{{ row.student.user.username }}</div>
+                            </td>
+                            <td>{% if row.avg_quiz is not None %}{{ row.avg_quiz }}{% else %}-{% endif %}</td>
+                            <td>{% if row.avg_assignment is not None %}{{ row.avg_assignment }}{% else %}-{% endif %}</td>
+                            <td>{% if row.attendance_pct is not None %}{{ row.attendance_pct }}%{% else %}-{% endif %}</td>
+                            <td>{% if row.completion_pct is not None %}{{ row.completion_pct }}%{% else %}-{% endif %}</td>
+                            <td>
+                                {% if row.flags %}
+                                    <span class="badge rounded-pill bg-warning text-dark">{{ row.flags|join:", " }}</span>
+                                {% else %}
+                                    <span class="badge rounded-pill bg-success-subtle text-success">On track</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if row.latest_submission %}
+                                    <span class="text-muted">Review</span>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7" class="text-muted">No student performance data available.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row g-3 mb-4">
+        <div class="col-lg-6">
+            <div class="card p-4">
+                <h5>Top courses by enrollment</h5>
+                <ul class="list-group list-group-flush">
+                    {% for course in top_courses %}
+                        <li class="list-group-item px-0 py-2">{{ course.title }} — {{ course.student_count }} students</li>
+                    {% empty %}
+                        <li class="list-group-item px-0 py-2 text-muted">No course data available.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card p-4">
+                <h5>Recent assignments</h5>
+                <ul class="list-group list-group-flush">
+                    {% for assignment in recent_assignments %}
+                        <li class="list-group-item px-0 py-2">{{ assignment.title }} — {{ assignment.course.title }}</li>
+                    {% empty %}
+                        <li class="list-group-item px-0 py-2 text-muted">No assignments found.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4">
+        <h5>Recent quiz results</h5>
+        <ul class="list-group list-group-flush">
+            {% for result in recent_quiz_results %}
+                <li class="list-group-item px-0 py-2">{{ result.student.user.username }} — {{ result.quiz.title }}: {{ result.score }}</li>
+            {% empty %}
+                <li class="list-group-item px-0 py-2 text-muted">No quiz results available.</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endblock %}

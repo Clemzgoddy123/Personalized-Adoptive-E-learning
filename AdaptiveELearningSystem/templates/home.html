@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% block title %}Home - Adaptive E-Learning{% endblock %}
+{% block extra_css %}
+<style>
+    .home-page { overflow: hidden; }
+    .hero-wrap { position: relative; padding: 5.5rem 0 4rem; }
+    .hero-wrap::before, .hero-wrap::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; z-index: -1; }
+    .hero-wrap::before { width: 28rem; height: 28rem; background: #d9eee6; right: -10rem; top: -8rem; }
+    .hero-wrap::after { width: 16rem; height: 16rem; background: #ffe0d4; left: -8rem; bottom: 2rem; }
+    .eyebrow { color: var(--coral); font-size: .75rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    .hero-title { max-width: 720px; font-size: clamp(3rem, 7vw, 6.6rem); letter-spacing: -.075em; line-height: .94; margin: 1rem 0 1.5rem; }
+    .hero-title em { color: var(--teal); font-style: normal; }
+    .hero-copy { color: var(--muted-ink); font-size: 1.1rem; line-height: 1.7; max-width: 560px; }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: .8rem; margin-top: 2rem; }
+    .hero-note { color: var(--muted-ink); font-size: .82rem; margin-top: 1rem; }
+    .orbit-panel { position: relative; min-height: 390px; display: grid; place-items: center; animation: rise-in .8s .2s both; }
+    .orbit-panel::before { content: ''; width: 290px; height: 290px; border: 1px solid #a8d5c8; border-radius: 50%; position: absolute; animation: spin 24s linear infinite; }
+    .orbit-panel::after { content: ''; width: 370px; height: 370px; border: 1px dashed #c7dcd2; border-radius: 50%; position: absolute; animation: spin-reverse 30s linear infinite; }
+    .learning-card { position: relative; z-index: 1; width: min(100%, 310px); background: #fff; border: 1px solid var(--line); border-radius: 24px; padding: 1.4rem; box-shadow: 0 22px 50px rgba(23,43,45,.14); animation: float 5s ease-in-out infinite; }
+    .card-kicker { color: var(--teal); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; }
+    .progress-line { height: 8px; background: #e9f0eb; border-radius: 20px; overflow: hidden; }
+    .progress-line span { display: block; width: 72%; height: 100%; background: var(--coral); border-radius: inherit; }
+    .mini-stat { position: absolute; z-index: 2; background: var(--ink); color: #fff; border-radius: 16px; padding: .85rem 1rem; box-shadow: 0 15px 30px rgba(23,43,45,.18); }
+    .mini-stat strong { display: block; color: #9de0ca; font-family: 'Space Grotesk', sans-serif; font-size: 1.35rem; }
+    .mini-stat small { color: rgba(255,255,255,.7); }
+    .mini-stat.one { top: 12%; right: 3%; animation: float 5s 1s ease-in-out infinite; }
+    .mini-stat.two { bottom: 10%; left: 4%; animation: float 5s 1.6s ease-in-out infinite; }
+    .section-label { color: var(--muted-ink); font-size: .78rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .feature-strip { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 1.2rem 0; }
+    .feature-item { color: var(--muted-ink); font-size: .9rem; }
+    .feature-item strong { color: var(--ink); font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; margin-right: .35rem; }
+    .path-card { height: 100%; border: 1px solid var(--line); border-radius: 18px; padding: 1.5rem; background: rgba(255,255,255,.65); transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease; }
+    .path-card:hover { transform: translateY(-6px); border-color: #a8d5c8; box-shadow: 0 18px 35px rgba(23,43,45,.1); }
+    .path-number { color: var(--coral); font-family: 'Space Grotesk', sans-serif; font-size: 2rem; }
+    .path-card p { color: var(--muted-ink); line-height: 1.6; }
+    .reveal { animation: rise-in .7s both; }
+    .delay-1 { animation-delay: .12s; } .delay-2 { animation-delay: .24s; } .delay-3 { animation-delay: .36s; }
+    @keyframes rise-in { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spin-reverse { to { transform: rotate(-360deg); } }
+    @media (max-width: 767px) { .hero-wrap { padding-top: 3.5rem; } .orbit-panel { min-height: 330px; margin-top: 1.5rem; } .orbit-panel::after { width: 300px; height: 300px; } .orbit-panel::before { width: 235px; height: 235px; } .mini-stat.one { right: 0; } .mini-stat.two { left: 0; } }
+    .home-footer { padding: 3rem 0 1.5rem; text-align: center; color: var(--muted-ink); background: linear-gradient(180deg, rgba(255,255,255,.95), rgba(245,248,244,.9)); border-top: 1px solid rgba(23,43,45,.08); }
+    .home-footer .footer-card { display: grid; gap: 1.5rem; justify-items: center; max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem; background: #fff; border: 1px solid rgba(23,43,45,.08); border-radius: 28px; box-shadow: 0 22px 50px rgba(23,43,45,.08); }
+    .home-footer .footer-title { font-size: 1rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); margin-bottom: 0.25rem; }
+    .home-footer .footer-copy { max-width: 680px; margin: 0; font-size: 1rem; line-height: 1.8; color: var(--muted-ink); }
+    .home-footer .footer-copy a { color: var(--teal); text-decoration: none; font-weight: 700; }
+    .home-footer .footer-copy a:hover { text-decoration: underline; }
+    .home-footer .social-list { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1.25rem; }
+    .home-footer .social-link { display: inline-flex; align-items: center; gap: 0.55rem; padding: 0.85rem 1rem; border-radius: 999px; background: rgba(11,119,116,.08); color: var(--teal); font-weight: 700; transition: transform .2s ease, background .2s ease, color .2s ease; text-decoration: none; }
+    .home-footer .social-link:hover { transform: translateY(-2px); background: rgba(11,119,116,.14); }
+    .home-footer .social-link .icon { width: 1.2rem; height: 1.2rem; display: inline-grid; place-items: center; font-size: 1rem; }
+    .home-footer .social-small { font-size: 0.9rem; margin-top: 0.75rem; color: var(--ink); }
+    @media (max-width: 767px) { .home-footer .footer-card { padding: 1.5rem 1rem; } .home-footer .social-list { gap: 0.5rem; } }
+</style>
+{% endblock %}
+{% block content %}
+<div class="home-page">
+    <section class="hero-wrap">
+        <div class="row align-items-center g-5">
+            <div class="col-lg-7 reveal">
+                <div class="eyebrow">A smarter school day</div>
+                <h1 class="hero-title">Make room for <em>better learning.</em></h1>
+                <p class="hero-copy">One calm place for courses, assignments, quizzes, attendance, live classes, and the next right recommendation.</p>
+                <div class="hero-actions">
+                    <a href="{% url 'login' %}?next=/students/" class="btn btn-primary">Open student dashboard</a>
+                    <a href="{% url 'login' %}?next=/teachers/" class="btn btn-outline-primary">Enter as a teacher</a>
+                </div>
+                <div class="hero-note">Built for focused progress, not busywork.</div>
+            </div>
+            <div class="col-lg-5">
+                <div class="orbit-panel">
+                    <div class="learning-card">
+                        <div class="d-flex justify-content-between align-items-start mb-4">
+                            <div><div class="card-kicker">Today's focus</div><h3 class="mt-2 mb-0">Keep momentum</h3></div>
+                            <span style="font-size: 1.8rem; color: var(--coral);">+</span>
+                        </div>
+                        <p class="text-muted mb-3">Complete your algebra review and revisit the latest class material.</p>
+                        <div class="d-flex justify-content-between small mb-2"><span>Weekly progress</span><strong>72%</strong></div>
+                        <div class="progress-line"><span></span></div>
+                        <div class="d-flex justify-content-between mt-4 small text-muted"><span>3 tasks done</span><span>2 to go</span></div>
+                    </div>
+                    <div class="mini-stat one"><strong>24/7</strong><small>learning access</small></div>
+                    <div class="mini-stat two"><strong>+18%</strong><small>progress this term</small></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="feature-strip reveal delay-1">
+        <div class="row gy-3">
+            <div class="col-6 col-md-3 feature-item"><strong>01</strong> Courses</div>
+            <div class="col-6 col-md-3 feature-item"><strong>02</strong> Assessments</div>
+            <div class="col-6 col-md-3 feature-item"><strong>03</strong> Live support</div>
+            <div class="col-6 col-md-3 feature-item"><strong>04</strong> Clear insight</div>
+        </div>
+    </section>
+
+    <section class="py-5">
+        <div class="row align-items-end mb-4 reveal delay-1">
+            <div class="col-md-7"><div class="section-label">Choose your starting point</div><h2 class="display-6 mt-2">A better rhythm for everyone.</h2></div>
+            <div class="col-md-5"><p class="text-muted mb-0">Students get clarity on what to do next. Teachers get the tools to make that next step meaningful.</p></div>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 reveal delay-2"><div class="path-card"><div class="path-number">01</div><h3 class="h4 mt-3">For students</h3><p>See your courses, upcoming work, quiz progress, attendance, and personalized recommendations in one focused view.</p><a href="{% url 'login' %}?next=/students/" class="btn btn-primary btn-sm">View my learning</a></div></div>
+            <div class="col-md-6 reveal delay-3"><div class="path-card"><div class="path-number">02</div><h3 class="h4 mt-3">For teachers</h3><p>Manage course materials, create quizzes, track student progress, and act on the signals that matter most.</p><a href="{% url 'login' %}?next=/teachers/" class="btn btn-outline-primary btn-sm">Open teaching tools</a></div></div>
+        </div>
+    </section>
+</div>
+
+<footer class="home-footer">
+    <div class="footer-card">
+        <div>
+            <div class="footer-title">Stay connected</div>
+            <p class="footer-copy">For questions, feedback, or school social media updates, reach us at <a href="mailto:adaptiveelearning51@gmail.com">adaptiveelearning51@gmail.com</a> or connect through our official channels below.</p>
+        </div>
+        <div class="social-list">
+            <a class="social-link" href="https://t.me/clement_godwin" target="_blank" rel="noopener noreferrer">
+                <span class="icon"><svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true"><path d="M120 0C53.73 0 0 53.73 0 120s53.73 120 120 120 120-53.73 120-120S186.27 0 120 0zm55.2 82l-16.6 78.3c-1.2 5.2-4.4 6.7-8.8 4.2l-24.3-17.9-11.7 11.3c-1.3 1.3-2.4 2.4-4.9 2.4l1.8-25.1 45.7-41.3c2-1.8-.4-2.8-3.1-1l-56.5 35.6-24.3-7.6c-5.3-1.7-5.4-5.3 1.11-7.8L163.4 74c4.4-1.6 8.2 1.1 6.8 8z"/></svg></span> Telegram
+            </a>
+            <a class="social-link" href="https://x.com/clement_godwin" target="_blank" rel="noopener noreferrer">
+                <span class="icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true"><path d="M23.643 4.937c-.835.37-1.732.62-2.675.733 0.962-.576 1.7-1.49 2.048-2.578-.901.534-1.9.92-2.958 1.13-.85-.905-2.06-1.472-3.4-1.472-2.574 0-4.664 2.092-4.664 4.673 0 .366.04.722.12 1.064-3.876-.195-7.31-2.05-9.61-4.873-.4.687-.63 1.48-.63 2.33 0 1.608.818 3.03 2.06 3.863-.759-.024-1.475-.232-2.1-.58v.06c0 2.25 1.6 4.13 3.73 4.55-.39.106-.8.163-1.22.163-.3 0-.6-.03-.89-.086.6 1.88 2.35 3.25 4.42 3.29-1.62 1.27-3.66 2.03-5.88 2.03-.38 0-.76-.02-1.13-.07 2.08 1.34 4.56 2.12 7.23 2.12 8.68 0 13.44-7.18 13.44-13.4 0-.2 0-.4-.01-.6.92-.67 1.7-1.5 2.32-2.46z"/></svg></span> X
+            </a>
+            <a class="social-link" href="https://www.linkedin.com/in/clement-godwin" target="_blank" rel="noopener noreferrer">
+                <span class="icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452H17.24v-5.569c0-1.328-.026-3.038-1.853-3.038-1.854 0-2.137 1.445-2.137 2.94v5.667H9.044V9h3.047v1.561h.043c.426-.806 1.466-1.654 3.017-1.654 3.227 0 3.823 2.124 3.823 4.887v6.658zM5.337 7.433c-.98 0-1.775-.795-1.775-1.777 0-.981.795-1.777 1.775-1.777.98 0 1.776.796 1.776 1.777 0 .982-.796 1.777-1.776 1.777zM6.765 20.452H3.911V9h2.854v11.452z"/></svg></span> LinkedIn
+            </a>
+            <a class="social-link" href="https://www.facebook.com/clement.godwin" target="_blank" rel="noopener noreferrer">
+                <span class="icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor" aria-hidden="true"><path d="M22.675 0H1.325C.593 0 0 .593 0 1.326v21.348C0 23.407.593 24 1.325 24H12.82v-9.294H9.692V11.24h3.128V8.413c0-3.1 1.893-4.785 4.659-4.785 1.325 0 2.464.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.762v2.31h3.587l-.467 3.467h-3.12V24h6.116C23.407 24 24 23.407 24 22.674V1.326C24 .593 23.407 0 22.675 0z"/></svg></span> Facebook
+            </a>
+        </div>
+        <div class="social-small">Follow the school updates, ask about admissions, or message us directly from your favorite social platform.</div>
+    </div>
+</footer>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Assignments{% endblock %}
+{% block content %}
+<h2>Assignments</h2>
+{% if teacher_profile %}
+    <div class="mb-3 text-end">
+        <a href="{% url 'create_assignment' %}" class="btn btn-success">Create Assignment</a>
+    </div>
+{% endif %}
+{% if assignments %}
+    <div class="list-group">
+        {% for assignment in assignments %}
+            <a href="/assignments/{{ assignment.id }}/" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ assignment.title }}</h5>
+                    <small>Due {{ assignment.deadline|date:'Y-m-d H:i' }}</small>
+                </div>
+                <p class="mb-1">Course: {{ assignment.course.title }}</p>
+                <small>Max score: {{ assignment.max_score }}</small>
+            </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">No assignments are currently available.</div>
+{% endif %}
+{% endblock %}

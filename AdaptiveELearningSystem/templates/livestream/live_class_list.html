@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% block title %}Live Classes{% endblock %}
+{% block content %}
+<h2>Live Classes</h2>
+<p class="text-muted">Teachers can create a live class, generate a join link, and share it with students right here.</p>
+
+{% if can_schedule %}
+<div class="card mb-4">
+    <div class="card-body">
+        <h5 class="card-title">Schedule a live class</h5>
+        <form method="post">
+            {% csrf_token %}
+            <div class="row g-3">
+                <div class="col-md-4">{{ form.course.label_tag }} {{ form.course }}</div>
+                <div class="col-md-4">{{ form.scheduled_time.label_tag }} {{ form.scheduled_time }}</div>
+                <div class="col-md-4">
+                    {{ form.meeting_link.label_tag }}
+                    {{ form.meeting_link }}
+                    <div class="form-text">A Jitsi room link is generated automatically for this class.</div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3">Create class</button>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% if live_classes %}
+    <div class="list-group">
+        {% for live in live_classes %}
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ live.course.title }}</h5>
+                    <small>{{ live.get_status_display }}</small>
+                </div>
+                <p class="mb-1">Scheduled: {{ live.scheduled_time|date:'Y-m-d H:i' }}</p>
+                <p class="mb-1">Teacher: {{ live.teacher.user.get_full_name|default:live.teacher.user.username }}</p>
+                <p class="mb-1">Meeting link: <a href="{{ live.meeting_link }}" target="_blank">{{ live.meeting_link }}</a></p>
+                <div class="mt-2">
+                    <a href="{% url 'live_class_detail' live.id %}" class="btn btn-sm btn-outline-primary">Open Classroom</a>
+                    <button type="button" class="btn btn-sm btn-outline-secondary copy-live-link" data-link="{{ live.meeting_link }}">Copy Link</button>
+                    <a href="{% url 'live_class_detail' live.id %}" class="btn btn-sm btn-outline-secondary">View Details</a>
+                    {% if can_schedule and live.teacher.user_id == user.id %}
+                        <form method="post" action="{% url 'generate_new_jitsi_link' live.id %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-success">Generate New Link</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">No live classes scheduled yet.</div>
+{% endif %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const meetingInput = document.getElementById('id_meeting_link');
+        const courseSelect = document.getElementById('id_course');
+        const scheduledInput = document.getElementById('id_scheduled_time');
+
+        function fillJitsiLink() {
+            if (!meetingInput) {
+                return;
+            }
+
+            if (meetingInput.value) {
+                return;
+            }
+
+            const courseOption = courseSelect && courseSelect.options[courseSelect.selectedIndex];
+            const courseTitle = courseOption ? courseOption.text : 'live-class';
+            const courseId = courseSelect && courseSelect.value ? courseSelect.value : '0';
+            const scheduledValue = scheduledInput ? scheduledInput.value : '';
+            let scheduledDate = new Date();
+
+            if (scheduledValue) {
+                scheduledDate = new Date(scheduledValue.replace('T', ' '));
+            }
+
+            if (Number.isNaN(scheduledDate.getTime())) {
+                scheduledDate = new Date();
+            }
+
+            const slug = courseTitle.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') || 'live-class';
+            const stamp = `${scheduledDate.getFullYear()}${String(scheduledDate.getMonth() + 1).padStart(2, '0')}${String(scheduledDate.getDate()).padStart(2, '0')}${String(scheduledDate.getHours()).padStart(2, '0')}${String(scheduledDate.getMinutes()).padStart(2, '0')}`;
+            const randomSuffix = Math.random().toString(36).slice(2, 8);
+            meetingInput.value = `https://meet.jit.si/adaptive-${slug}-${courseId}-${stamp}-${randomSuffix}`;
+        }
+
+        fillJitsiLink();
+
+        if (courseSelect) {
+            courseSelect.addEventListener('change', fillJitsiLink);
+        }
+
+        if (scheduledInput) {
+            scheduledInput.addEventListener('change', fillJitsiLink);
+        }
+
+        document.querySelectorAll('.copy-live-link').forEach(function (button) {
+            button.addEventListener('click', function () {
+                navigator.clipboard.writeText(button.dataset.link).then(function () {
+                    button.textContent = 'Link copied!';
+                    setTimeout(function () { button.textContent = 'Copy Link'; }, 2000);
+                }).catch(function () {
+                    window.prompt('Copy the link manually:', button.dataset.link);
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

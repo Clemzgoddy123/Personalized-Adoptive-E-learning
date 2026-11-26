@@ -91,3 +91,11 @@ INSERT INTO registered_users (username, email, role, registered_at) VALUES ('new
 -- Registration backup
 CREATE TABLE IF NOT EXISTS registered_users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, email TEXT NOT NULL, role TEXT NOT NULL, registered_at TEXT NOT NULL);
 INSERT INTO registered_users (username, email, role, registered_at) VALUES ('newstudent', 'student@example.com', 'student', '2026-11-25 15:25:41 UTC');
+
+-- Registration backup
+CREATE TABLE IF NOT EXISTS registered_users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, email TEXT NOT NULL, role TEXT NOT NULL, registered_at TEXT NOT NULL);
+INSERT INTO registered_users (username, email, role, registered_at) VALUES ('newstudent', 'student@example.com', 'student', '2026-11-26 06:40:07 UTC');
+
+-- Registration backup
+CREATE TABLE IF NOT EXISTS registered_users (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT NOT NULL, email TEXT NOT NULL, role TEXT NOT NULL, registered_at TEXT NOT NULL);
+INSERT INTO registered_users (username, email, role, registered_at) VALUES ('newstudent', 'student@example.com', 'student', '2026-11-26 06:40:37 UTC');

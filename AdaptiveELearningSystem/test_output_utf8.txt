@@ -1,0 +1,553 @@
+python : Creating test database for alias 'default' 
+('file:memorydb_default?mode=memory&cache=shared')...
+At line:1 char:78
++ ... ngSystem' ; python manage.py test --verbosity 2 > test_output.txt 2>& ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Creating test d...che=shared')... 
+   :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+Found 22 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: admin, assignments, attendance, auth, contenttypes, courses, livestream, notifications, quizzes, recommendations, sessions, students, teachers
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying auth.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying students.0001_initial... OK
+  Applying teachers.0001_initial... OK
+  Applying courses.0001_initial... OK
+  Applying assignments.0001_initial... OK
+  Applying assignments.0002_rename_file_path_to_submission_file... OK
+  Applying attendance.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying courses.0002_seed_secondary_courses... OK
+  Applying courses.0003_alter_learningmaterial_file_path_and_more... OK
+  Applying livestream.0001_initial... OK
+  Applying notifications.0001_initial... OK
+  Applying quizzes.0001_initial... OK
+  Applying quizzes.0002_question_quizquestion... OK
+  Applying recommendations.0001_initial... OK
+  Applying sessions.0001_initial... OK
+  Applying students.0002_studentprofile_bio_studentprofile_phone_number_and_more... OK
+test_home_dashboard_links_point_to_login 
+(accounts.tests.AuthFlowTests.test_home_dashboard_links_point_to_login) ... ok
+test_registration_appends_to_sql_backup 
+(accounts.tests.AuthFlowTests.test_registration_appends_to_sql_backup) ... ok
+test_registration_saves_user_and_profile 
+(accounts.tests.AuthFlowTests.test_registration_saves_user_and_profile) ... ok
+test_student_with_teacher_profile_cannot_access_teacher_dashboard (accounts.tes
+ts.AuthFlowTests.test_student_with_teacher_profile_cannot_access_teacher_dashbo
+ard) ... ok
+test_teacher_with_student_profile_cannot_access_student_dashboard (accounts.tes
+ts.AuthFlowTests.test_teacher_with_student_profile_cannot_access_student_dashbo
+ard) ... ok
+test_analytics_dashboard_renders_for_authenticated_user (analytics.tests.Analyt
+icsTests.test_analytics_dashboard_renders_for_authenticated_user) ... ok
+test_analytics_dashboard_requires_login 
+(analytics.tests.AnalyticsTests.test_analytics_dashboard_requires_login) ... ok
+test_build_jitsi_embed_url_adds_embed_parameters (livestream.tests.JitsiEmbedUr
+lTests.test_build_jitsi_embed_url_adds_embed_parameters) ... ok
+test_student_can_view_quiz_questions 
+(quizzes.tests.QuizAccessTests.test_student_can_view_quiz_questions) ... ERROR
+test_quiz_is_not_created_when_question_bank_is_too_small (quizzes.tests.QuizCre
+ationTests.test_quiz_is_not_created_when_question_bank_is_too_small) ... FAIL
+test_quiz_list_renders_question_count 
+(quizzes.tests.QuizCreationTests.test_quiz_list_renders_question_count) ... ok
+test_teacher_can_create_quiz_with_random_course_questions (quizzes.tests.QuizCr
+eationTests.test_teacher_can_create_quiz_with_random_course_questions) ... FAIL
+test_student_can_submit_quiz_answers (quizzes.tests_student_quiz.StudentQuizTes
+ts.test_student_can_submit_quiz_answers) ... ok
+test_student_can_view_quiz_list_and_take_quiz (quizzes.tests_student_quiz.Stude
+ntQuizTests.test_student_can_view_quiz_list_and_take_quiz) ... FAIL
+test_student_cannot_take_quiz_if_not_enrolled (quizzes.tests_student_quiz.Stude
+ntQuizTests.test_student_cannot_take_quiz_if_not_enrolled) ... ok
+test_reports_page_renders_for_authenticated_user 
+(reports.tests.ReportsTests.test_reports_page_renders_for_authenticated_user) 
+... ok
+test_reports_page_requires_login 
+(reports.tests.ReportsTests.test_reports_page_requires_login) ... ok
+test_dashboard_handles_authenticated_user_without_student_profile (students.tes
+ts.StudentDashboardTests.test_dashboard_handles_authenticated_user_without_stud
+ent_profile) ... ok
+test_dashboard_renders_student_data_and_recommendations (students.tests.Student
+DashboardTests.test_dashboard_renders_student_data_and_recommendations) ... ok
+test_teacher_can_upload_pdf_to_owned_course (teachers.tests.LearningMaterialUpl
+oadTests.test_teacher_can_upload_pdf_to_owned_course) ... ok
+test_teacher_cannot_upload_to_another_teachers_course (teachers.tests.LearningM
+aterialUploadTests.test_teacher_cannot_upload_to_another_teachers_course) ... 
+ok
+test_teacher_cannot_upload_unsupported_file_type (teachers.tests.LearningMateri
+alUploadTests.test_teacher_cannot_upload_unsupported_file_type) ... ok
+
+======================================================================
+ERROR: test_student_can_view_quiz_questions 
+(quizzes.tests.QuizAccessTests.test_student_can_view_quiz_questions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\chromeworld\OneDrive\Desktop\project\AdaptiveELearningSystem\q
+uizzes\tests.py", line 134, in test_student_can_view_quiz_questions
+    response = self.client.get(reverse('student_view_quiz_questions', 
+args=[self.quiz.id]))
+                               
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chromeworld\AppData\Local\Programs\Python\Python312\Lib\site-p
+ackages\django\urls\base.py", line 98, in reverse
+    resolved_url = resolver._reverse_with_prefix(view, prefix, *args, **kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chromeworld\AppData\Local\Programs\Python\Python312\Lib\site-p
+ackages\django\urls\resolvers.py", line 842, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 
+'student_view_quiz_questions' not found. 'student_view_quiz_questions' is not 
+a valid view function or pattern name.
+
+======================================================================
+FAIL: test_quiz_is_not_created_when_question_bank_is_too_small (quizzes.tests.Q
+uizCreationTests.test_quiz_is_not_created_when_question_bank_is_too_small)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\chromeworld\OneDrive\Desktop\project\AdaptiveELearningSystem\q
+uizzes\tests.py", line 71, in 
+test_quiz_is_not_created_when_question_bank_is_too_small
+    self.assertContains(response, 'Only 1 question(s) are available')
+AssertionError: False is not true : Couldn't find 'Only 1 question(s) are 
+available' in the following response
+b'<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    
+<meta name="viewport" content="width=device-width, initial-scale=1.0">\n    
+<title>Create Quiz</title>\n    <link rel="preconnect" 
+href="https://fonts.googleapis.com">\n    <link rel="preconnect" 
+href="https://fonts.gstatic.com" crossorigin>\n    <link href="https://fonts.go
+ogleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght
+@500;600;700&display=swap" rel="stylesheet">\n    <link 
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+rel="stylesheet">\n    <style>\n        :root {\n            --ink: #172b2d;\n 
+           --muted-ink: #607274;\n            --paper: #f7f8f3;\n            
+--teal: #0b7774;\n            --teal-dark: #075a58;\n            --coral: 
+#ef765e;\n            --line: #dbe6df;\n        }\n        * { box-sizing: 
+border-box; }\n        body { background: var(--paper); color: var(--ink); 
+font-family: \'DM Sans\', sans-serif; }\n        h1, h2, h3, h4, h5, h6, 
+.navbar-brand { font-family: \'Space Grotesk\', sans-serif; }\n        
+.site-nav { background: var(--ink); border-bottom: 1px solid 
+rgba(255,255,255,.1); padding: .85rem 0; }\n        .site-nav .navbar-brand { 
+letter-spacing: -.04em; font-size: 1.25rem; }\n        .site-nav .navbar-brand 
+span { color: var(--coral); }\n        .site-nav .nav-link { color: 
+rgba(255,255,255,.72); font-size: .82rem; margin-left: .35rem; }\n        
+.site-nav .nav-link:hover, .site-nav .nav-link:focus { color: #fff; }\n        
+.site-nav .navbar-toggler { border-color: rgba(255,255,255,.3); }\n        
+.page-shell { min-height: calc(100vh - 74px); }\n        .btn { border-radius: 
+999px; font-weight: 700; padding: .7rem 1.15rem; }\n        .btn-primary { 
+background: var(--teal); border-color: var(--teal); }\n        
+.btn-primary:hover { background: var(--teal-dark); border-color: 
+var(--teal-dark); }\n        .btn-outline-primary { color: var(--teal); 
+border-color: var(--teal); }\n        .btn-outline-primary:hover { background: 
+var(--teal); border-color: var(--teal); }\n        .card { border: 1px solid 
+var(--line); box-shadow: 0 10px 28px rgba(23,43,45,.06); }\n        @media 
+(prefers-reduced-motion: reduce) {\n            *, *::before, *::after { 
+animation-duration: .01ms !important; animation-iteration-count: 1 !important; 
+scroll-behavior: auto !important; }\n        }\n        /* Reveal animation 
+used by dashboards */\n        .reveal { opacity: 0; transform: 
+translateY(14px) scale(.995); transition: opacity .65s 
+cubic-bezier(.2,.9,.2,1), transform .65s cubic-bezier(.2,.9,.2,1); }\n        
+.reveal.active { opacity: 1; transform: translateY(0) scale(1); }\n        
+.portal-heading { display: inline-block; position: relative; overflow: hidden; 
+}\n        .portal-heading::after { content: ""; position: absolute; left: 
+-120%; top: 0; width: 120%; height: 100%; background: linear-gradient(90deg, 
+rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 100%); 
+transform: skewX(-18deg); animation: shimmer 2.2s linear infinite; 
+pointer-events: none; }\n        @keyframes shimmer { from { left: -120%; } to 
+{ left: 120%; } }\n        .float-subtle { animation: floatY 6s ease-in-out 
+infinite; }\n        @keyframes floatY { 0% { transform: translateY(0); } 50% 
+{ transform: translateY(-6px); } 100% { transform: translateY(0); } }\n        
+/* Small pulsing badge for unread counts */\n        .badge-pulse { display: 
+inline-block; vertical-align: middle; animation: pulse 1.8s infinite 
+ease-in-out; }\n        @keyframes pulse { 0% { transform: scale(1); 
+box-shadow: 0 0 0 0 rgba(239,118,94,0.28);} 70% { transform: scale(1.06); 
+box-shadow: 0 0 20px 8px rgba(239,118,94,0); } 100% { transform: scale(1); 
+box-shadow: 0 0 0 0 rgba(239,118,94,0); } }\n        /* Small ping indicator 
+used in section headings */\n        .ping { display:inline-block; width:10px; 
+height:10px; border-radius:50%; background:var(--coral); box-shadow: 0 0 0 
+rgba(239,118,94,0.6); animation: ping 1.6s infinite ease-out; }\n        
+@keyframes ping { 0% { transform: scale(.9); box-shadow: 0 0 0 0 
+rgba(239,118,94,0.6);} 70% { transform: scale(1.2); box-shadow: 0 0 20px 8px 
+rgba(239,118,94,0);} 100% { transform: scale(.9); box-shadow: 0 0 0 0 
+rgba(239,118,94,0);} }\n    </style>\n    \n</head>\n<body>\n<nav 
+class="navbar navbar-expand-lg navbar-dark site-nav">\n    <div 
+class="container-fluid">\n        <a class="navbar-brand" 
+href="/"><span>+</span> Adaptive E-Learning</a>\n        <button 
+class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" 
+aria-label="Toggle navigation">\n            <span 
+class="navbar-toggler-icon"></span>\n        </button>\n        <div 
+class="collapse navbar-collapse" id="navMenu">\n            <ul 
+class="navbar-nav ms-auto mb-2 mb-lg-0">\n                <li 
+class="nav-item"><a class="nav-link" href="/">Home</a></li>\n                
+\n                    \n                        <li class="nav-item"><a 
+class="nav-link" href="/teachers/">Teacher Dashboard</a></li>\n                
+    \n                \n                <li class="nav-item"><a 
+class="nav-link" href="/courses/">Courses</a></li>\n                <li 
+class="nav-item"><a class="nav-link" 
+href="/assignments/">Assignments</a></li>\n                <li 
+class="nav-item"><a class="nav-link" href="/attendance/">Attendance</a></li>\n 
+               <li class="nav-item"><a class="nav-link" 
+href="/quizzes/">Quizzes</a></li>\n                <li class="nav-item"><a 
+class="nav-link" href="/livestream/">Live Classes</a></li>\n                
+<li class="nav-item"><a class="nav-link" 
+href="/recommendations/">Recommendations</a></li>\n                <li 
+class="nav-item"><a class="nav-link" href="/analytics/">Analytics</a></li>\n   
+             <li class="nav-item"><a class="nav-link" 
+href="/reports/">Reports</a></li>\n                <li class="nav-item">\n     
+               <a class="nav-link" href="/notifications/">\n                   
+     Notifications\n                        \n                    </a>\n       
+         </li>\n                \n                    <li class="nav-item"><a 
+class="nav-link" href="/accounts/profile/">quiz-teacher</a></li>\n             
+       <li class="nav-item"><a class="nav-link" 
+href="/accounts/login/">Logout</a></li>\n                \n            </ul>\n 
+       </div>\n    </div>\n</nav>\n<main class="page-shell">\n<div 
+class="container">\n    \n    \n<div class="row justify-content-center">\n    
+<div class="col-md-8">\n        <div class="card">\n            <div 
+class="card-body">\n                <h2>Create a Quiz</h2>\n                
+<p>Use this form to assign a new quiz to students in your course.</p>\n        
+        <form method="post" novalidate>\n                    <input 
+type="hidden" name="csrfmiddlewaretoken" 
+value="tI7NfjE5s8zcuv8gdhZdbl578BDOX592xKQ9RULRv38Pg2JXmntnuWzPW6tfJUI1">\n    
+                <h5>Quiz Details</h5>\n                    \n                  
+  \n                        <div class="mb-3">\n                            
+<label class="form-label" for="id_course">Course</label>\n                     
+       <select name="course" class="form-select" required id="id_course">\n  
+<option value="">---------</option>\n\n  <option value="1" 
+selected>Biology</option>\n\n</select>\n                            \n         
+               </div>\n                    \n                        <div 
+class="mb-3">\n                            <label class="form-label" 
+for="id_title">Quiz Title</label>\n                            <input 
+type="text" name="title" value="Incomplete Quiz" class="form-control" 
+maxlength="200" required id="id_title">\n                            \n        
+                </div>\n                    \n                        <div 
+class="mb-3">\n                            <label class="form-label" 
+for="id_total_marks">Total Marks</label>\n                            <input 
+type="number" name="total_marks" value="30" class="form-control" min="0" 
+required id="id_total_marks">\n                            \n                  
+      </div>\n                    \n                        <div 
+class="mb-3">\n                            <label class="form-label" 
+for="id_duration_minutes">Duration (minutes)</label>\n                         
+   <input type="number" name="duration_minutes" value="25" 
+class="form-control" min="0" required id="id_duration_minutes">\n              
+              \n                        </div>\n                    \n\n       
+             <h5 class="mt-4">Quiz Questions</h5>\n                    <p 
+class="text-muted">Add one or more questions with answer options and correct 
+choice.</p>\n                    <ul class="errorlist nonfield"><li>(Hidden 
+field TOTAL_FORMS) This field is required.</li><li>(Hidden field 
+INITIAL_FORMS) This field is required.</li></ul>\n\n  <div><input 
+type="hidden" name="form-TOTAL_FORMS" id="id_form-TOTAL_FORMS"><input 
+type="hidden" name="form-INITIAL_FORMS" id="id_form-INITIAL_FORMS"><input 
+type="hidden" name="form-MIN_NUM_FORMS" id="id_form-MIN_NUM_FORMS"><input 
+type="hidden" name="form-MAX_NUM_FORMS" id="id_form-MAX_NUM_FORMS"></div>\n    
+                <div id="question-forms-container">\n                        
+\n                    </div>\n\n                    <button type="button" 
+id="add-question-btn" class="btn btn-outline-primary mb-3">Add another 
+question</button>\n\n                    <div id="empty-question-form" 
+class="d-none">\n                        <div class="card mb-3 
+question-form-card">\n                            <div class="card-body">\n    
+                            <h6 class="card-title">Question __number__</h6>\n  
+                              \n                                    <div 
+class="mb-3">\n                                        <label 
+class="form-label" for="id_form-__prefix__-text">Text</label>\n                
+                        <textarea name="form-__prefix__-text" cols="40" 
+rows="2" class="form-control" id="id_form-__prefix__-text">\n</textarea>\n     
+                               </div>\n                                \n      
+                              <div class="mb-3">\n                             
+           <label class="form-label" for="id_form-__prefix__-option_a">Option 
+a</label>\n                                        <input type="text" 
+name="form-__prefix__-option_a" class="form-control" maxlength="255" 
+id="id_form-__prefix__-option_a">\n                                    
+</div>\n                                \n                                    
+<div class="mb-3">\n                                        <label 
+class="form-label" for="id_form-__prefix__-option_b">Option b</label>\n        
+                                <input type="text" 
+name="form-__prefix__-option_b" class="form-control" maxlength="255" 
+id="id_form-__prefix__-option_b">\n                                    
+</div>\n                                \n                                    
+<div class="mb-3">\n                                        <label 
+class="form-label" for="id_form-__prefix__-option_c">Option c</label>\n        
+                                <input type="text" 
+name="form-__prefix__-option_c" class="form-control" maxlength="255" 
+id="id_form-__prefix__-option_c">\n                                    
+</div>\n                                \n                                    
+<div class="mb-3">\n                                        <label 
+class="form-label" for="id_form-__prefix__-option_d">Option d</label>\n        
+                                <input type="text" 
+name="form-__prefix__-option_d" class="form-control" maxlength="255" 
+id="id_form-__prefix__-option_d">\n                                    
+</div>\n                                \n                                    
+<div class="mb-3">\n                                        <label 
+class="form-label" for="id_form-__prefix__-correct_choice">Correct 
+choice</label>\n                                        <select 
+name="form-__prefix__-correct_choice" class="form-select" 
+id="id_form-__prefix__-correct_choice">\n  <option value="" 
+selected>---------</option>\n\n  <option value="A">A</option>\n\n  <option 
+value="B">B</option>\n\n  <option value="C">C</option>\n\n  <option 
+value="D">D</option>\n\n</select>\n                                    
+</div>\n                                \n                                    
+<div class="mb-3">\n                                        <label 
+class="form-label" for="id_form-__prefix__-marks">Marks</label>\n              
+                          <input type="number" name="form-__prefix__-marks" 
+value="1" class="form-control" min="0" id="id_form-__prefix__-marks">\n        
+                            </div>\n                                \n         
+                           <div class="mb-3">\n                                
+        <label class="form-label" 
+for="id_form-__prefix__-DELETE">Delete</label>\n                               
+         <input type="checkbox" name="form-__prefix__-DELETE" 
+id="id_form-__prefix__-DELETE">\n                                    </div>\n  
+                              \n                                \n             
+                       <div class="form-check">\n                              
+          <input type="checkbox" name="form-__prefix__-DELETE" 
+id="id_form-__prefix__-DELETE">\n                                        
+<label class="form-check-label" for="id_form-__prefix__-DELETE">Remove this 
+question</label>\n                                    </div>\n                 
+               \n                            </div>\n                        
+</div>\n                    </div>\n\n                    \n                   
+     <div class="alert alert-danger"><ul class="errorlist nonform"><li>Please 
+submit at least 1 form.</li></ul></div>\n                    \n                
+    <button type="submit" class="btn btn-primary">Create Quiz</button>\n       
+             <a href="/quizzes/" class="btn btn-secondary ms-2">Cancel</a>\n   
+             </form>\n                <script>\n                    
+(function() {\n                        const addButton = 
+document.getElementById(\'add-question-btn\');\n                        const 
+container = document.getElementById(\'question-forms-container\');\n           
+             const emptyFormWrapper = 
+document.getElementById(\'empty-question-form\');\n                        
+const totalFormsInput = 
+document.querySelector(\'input[name="form-TOTAL_FORMS"]\');\n\n                
+        function updateFormIndices() {\n                            const 
+cards = container.querySelectorAll(\'.question-form-card\');\n                 
+           cards.forEach((card, index) => {\n                                
+const title = card.querySelector(\'.card-title\');\n                           
+     if (title) {\n                                    title.textContent = 
+\'Question \' + (index + 1);\n                                }\n              
+                  card.querySelectorAll(\'input, textarea, select, 
+label\').forEach(el => {\n                                    if (el.name) {\n 
+                                       el.name = el.name.replace(/form-\\d+-/, 
+\'form-\' + index + \'-\');\n                                    }\n           
+                         if (el.id) {\n                                        
+el.id = el.id.replace(/form-\\d+-/, \'form-\' + index + \'-\');\n              
+                      }\n                                    if (el.htmlFor) 
+{\n                                        el.htmlFor = 
+el.htmlFor.replace(/form-\\d+-/, \'form-\' + index + \'-\');\n                 
+                   }\n                                });\n                    
+        });\n                        }\n\n                        
+addButton.addEventListener(\'click\', function() {\n                           
+ const totalForms = parseInt(totalFormsInput.value, 10);\n                     
+       const newFormHtml = emptyFormWrapper.innerHTML.replace(/__prefix__/g, 
+totalForms);\n                            
+container.insertAdjacentHTML(\'beforeend\', newFormHtml);\n                    
+        totalFormsInput.value = totalForms + 1;\n                            
+updateFormIndices();\n                        });\n\n                        
+container.addEventListener(\'click\', function(event) {\n                      
+      if (event.target.matches(\'.form-check-input\')) {\n                     
+           const card = event.target.closest(\'.question-form-card\');\n       
+                         if (card && event.target.checked) {\n                 
+                   card.style.display = \'none\';\n                            
+        updateFormIndices();\n                                } else if (card) 
+{\n                                    card.style.display = \'\';\n            
+                        updateFormIndices();\n                                
+}\n                            }\n                        });\n                
+    })();\n                </script>\n            </div>\n        </div>\n    
+</div>\n</div>\n\n</div>\n</main>\n<script src="https://cdn.jsdelivr.net/npm/bo
+otstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>\n<script 
+src="https://cdn.jsdelivr.net/npm/chart.js"></script>\n<script>\n    
+(function(){\n        if (window.matchMedia && 
+window.matchMedia(\'(prefers-reduced-motion: reduce)\').matches) return;\n     
+   try {\n            const els = document.querySelectorAll(\'.student-portal 
+.card, .teacher-portal .card, .portal-heading\');\n            if 
+(!els.length) return;\n            const io = new 
+IntersectionObserver((entries)=>{\n                entries.forEach(entry=>{\n  
+                  if (entry.isIntersecting) {\n                        const 
+el = entry.target;\n                        // staggered delay if present\n    
+                    const delay = parseFloat(el.dataset.delay || 0);\n         
+               setTimeout(()=> el.classList.add(\'active\'), Math.round(delay 
+* 1000));\n                        io.unobserve(el);\n                    }\n  
+              });\n            }, { threshold: 0.12 });\n            
+els.forEach((el, i)=>{\n                // assign small stagger when not 
+explicitly set\n                if (!el.dataset.delay) el.dataset.delay = (i % 
+6) * 0.06;\n                el.classList.add(\'reveal\');\n                
+io.observe(el);\n            });\n        } catch (e) { console.warn(\'reveal 
+init\', e); }\n    })();\n</script>\n\n</body>\n</html>\n'
+
+======================================================================
+FAIL: test_teacher_can_create_quiz_with_random_course_questions (quizzes.tests.
+QuizCreationTests.test_teacher_can_create_quiz_with_random_course_questions)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\chromeworld\OneDrive\Desktop\project\AdaptiveELearningSystem\q
+uizzes\tests.py", line 51, in 
+test_teacher_can_create_quiz_with_random_course_questions
+    self.assertRedirects(response, reverse('quiz_list'))
+AssertionError: 200 != 302 : Response didn't redirect as expected: Response 
+code was 200 (expected 302)
+
+======================================================================
+FAIL: test_student_can_view_quiz_list_and_take_quiz (quizzes.tests_student_quiz
+.StudentQuizTests.test_student_can_view_quiz_list_and_take_quiz)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\chromeworld\OneDrive\Desktop\project\AdaptiveELearningSystem\q
+uizzes\tests_student_quiz.py", line 65, in 
+test_student_can_view_quiz_list_and_take_quiz
+    self.assertContains(response, 'Take Quiz')
+AssertionError: False is not true : Couldn't find 'Take Quiz' in the following 
+response
+b'<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta charset="UTF-8">\n    
+<meta name="viewport" content="width=device-width, initial-scale=1.0">\n    
+<title>Quizzes</title>\n    <link rel="preconnect" 
+href="https://fonts.googleapis.com">\n    <link rel="preconnect" 
+href="https://fonts.gstatic.com" crossorigin>\n    <link href="https://fonts.go
+ogleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght
+@500;600;700&display=swap" rel="stylesheet">\n    <link 
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" 
+rel="stylesheet">\n    <style>\n        :root {\n            --ink: #172b2d;\n 
+           --muted-ink: #607274;\n            --paper: #f7f8f3;\n            
+--teal: #0b7774;\n            --teal-dark: #075a58;\n            --coral: 
+#ef765e;\n            --line: #dbe6df;\n        }\n        * { box-sizing: 
+border-box; }\n        body { background: var(--paper); color: var(--ink); 
+font-family: \'DM Sans\', sans-serif; }\n        h1, h2, h3, h4, h5, h6, 
+.navbar-brand { font-family: \'Space Grotesk\', sans-serif; }\n        
+.site-nav { background: var(--ink); border-bottom: 1px solid 
+rgba(255,255,255,.1); padding: .85rem 0; }\n        .site-nav .navbar-brand { 
+letter-spacing: -.04em; font-size: 1.25rem; }\n        .site-nav .navbar-brand 
+span { color: var(--coral); }\n        .site-nav .nav-link { color: 
+rgba(255,255,255,.72); font-size: .82rem; margin-left: .35rem; }\n        
+.site-nav .nav-link:hover, .site-nav .nav-link:focus { color: #fff; }\n        
+.site-nav .navbar-toggler { border-color: rgba(255,255,255,.3); }\n        
+.page-shell { min-height: calc(100vh - 74px); }\n        .btn { border-radius: 
+999px; font-weight: 700; padding: .7rem 1.15rem; }\n        .btn-primary { 
+background: var(--teal); border-color: var(--teal); }\n        
+.btn-primary:hover { background: var(--teal-dark); border-color: 
+var(--teal-dark); }\n        .btn-outline-primary { color: var(--teal); 
+border-color: var(--teal); }\n        .btn-outline-primary:hover { background: 
+var(--teal); border-color: var(--teal); }\n        .card { border: 1px solid 
+var(--line); box-shadow: 0 10px 28px rgba(23,43,45,.06); }\n        @media 
+(prefers-reduced-motion: reduce) {\n            *, *::before, *::after { 
+animation-duration: .01ms !important; animation-iteration-count: 1 !important; 
+scroll-behavior: auto !important; }\n        }\n        /* Reveal animation 
+used by dashboards */\n        .reveal { opacity: 0; transform: 
+translateY(14px) scale(.995); transition: opacity .65s 
+cubic-bezier(.2,.9,.2,1), transform .65s cubic-bezier(.2,.9,.2,1); }\n        
+.reveal.active { opacity: 1; transform: translateY(0) scale(1); }\n        
+.portal-heading { display: inline-block; position: relative; overflow: hidden; 
+}\n        .portal-heading::after { content: ""; position: absolute; left: 
+-120%; top: 0; width: 120%; height: 100%; background: linear-gradient(90deg, 
+rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 50%, rgba(255,255,255,0) 100%); 
+transform: skewX(-18deg); animation: shimmer 2.2s linear infinite; 
+pointer-events: none; }\n        @keyframes shimmer { from { left: -120%; } to 
+{ left: 120%; } }\n        .float-subtle { animation: floatY 6s ease-in-out 
+infinite; }\n        @keyframes floatY { 0% { transform: translateY(0); } 50% 
+{ transform: translateY(-6px); } 100% { transform: translateY(0); } }\n        
+/* Small pulsing badge for unread counts */\n        .badge-pulse { display: 
+inline-block; vertical-align: middle; animation: pulse 1.8s infinite 
+ease-in-out; }\n        @keyframes pulse { 0% { transform: scale(1); 
+box-shadow: 0 0 0 0 rgba(239,118,94,0.28);} 70% { transform: scale(1.06); 
+box-shadow: 0 0 20px 8px rgba(239,118,94,0); } 100% { transform: scale(1); 
+box-shadow: 0 0 0 0 rgba(239,118,94,0); } }\n        /* Small ping indicator 
+used in section headings */\n        .ping { display:inline-block; width:10px; 
+height:10px; border-radius:50%; background:var(--coral); box-shadow: 0 0 0 
+rgba(239,118,94,0.6); animation: ping 1.6s infinite ease-out; }\n        
+@keyframes ping { 0% { transform: scale(.9); box-shadow: 0 0 0 0 
+rgba(239,118,94,0.6);} 70% { transform: scale(1.2); box-shadow: 0 0 20px 8px 
+rgba(239,118,94,0);} 100% { transform: scale(.9); box-shadow: 0 0 0 0 
+rgba(239,118,94,0);} }\n    </style>\n    \n</head>\n<body>\n<nav 
+class="navbar navbar-expand-lg navbar-dark site-nav">\n    <div 
+class="container-fluid">\n        <a class="navbar-brand" 
+href="/"><span>+</span> Adaptive E-Learning</a>\n        <button 
+class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" 
+aria-label="Toggle navigation">\n            <span 
+class="navbar-toggler-icon"></span>\n        </button>\n        <div 
+class="collapse navbar-collapse" id="navMenu">\n            <ul 
+class="navbar-nav ms-auto mb-2 mb-lg-0">\n                <li 
+class="nav-item"><a class="nav-link" href="/">Home</a></li>\n                
+\n                    \n                        <li class="nav-item"><a 
+class="nav-link" href="/students/">Student Dashboard</a></li>\n                
+    \n                \n                <li class="nav-item"><a 
+class="nav-link" href="/courses/">Courses</a></li>\n                <li 
+class="nav-item"><a class="nav-link" 
+href="/assignments/">Assignments</a></li>\n                <li 
+class="nav-item"><a class="nav-link" href="/attendance/">Attendance</a></li>\n 
+               <li class="nav-item"><a class="nav-link" 
+href="/quizzes/">Quizzes</a></li>\n                <li class="nav-item"><a 
+class="nav-link" href="/livestream/">Live Classes</a></li>\n                
+<li class="nav-item"><a class="nav-link" 
+href="/recommendations/">Recommendations</a></li>\n                <li 
+class="nav-item"><a class="nav-link" href="/analytics/">Analytics</a></li>\n   
+             <li class="nav-item"><a class="nav-link" 
+href="/reports/">Reports</a></li>\n                <li class="nav-item">\n     
+               <a class="nav-link" href="/notifications/">\n                   
+     Notifications\n                        \n                    </a>\n       
+         </li>\n                \n                    <li class="nav-item"><a 
+class="nav-link" href="/accounts/profile/">student-user</a></li>\n             
+       <li class="nav-item"><a class="nav-link" 
+href="/accounts/login/">Logout</a></li>\n                \n            </ul>\n 
+       </div>\n    </div>\n</nav>\n<main class="page-shell">\n<div 
+class="container">\n    \n    \n<div class="d-flex justify-content-between 
+align-items-center mb-4">\n    <div>\n        <h2>Quizzes</h2>\n        <p 
+class="text-muted">Browse quizzes or create a new quiz for your 
+students.</p>\n    </div>\n    \n</div>\n\n\n    <div class="list-group">\n    
+    \n            <div class="list-group-item">\n                <div 
+class="d-flex w-100 justify-content-between align-items-center">\n             
+       <div>\n                        <h5 class="mb-1">Biology Review</h5>\n   
+                     <p class="mb-1">Course: Biology</p>\n                     
+   <small class="text-muted">Duration: 15 minutes | Questions: 2</small>\n     
+               </div>\n                    <div class="text-end">\n            
+            <span class="badge bg-primary d-block mb-2">4 marks</span>\n       
+                 \n                            \n                              
+  <span class="badge bg-info d-block mb-2">New quiz</span>\n                   
+             <a href="/quizzes/take/1/" class="btn btn-sm btn-primary">Start 
+Quiz</a>\n                            \n                        \n             
+       </div>\n                </div>\n            </div>\n        \n    
+</div>\n\n\n</div>\n</main>\n<script src="https://cdn.jsdelivr.net/npm/bootstra
+p@5.3.2/dist/js/bootstrap.bundle.min.js"></script>\n<script 
+src="https://cdn.jsdelivr.net/npm/chart.js"></script>\n<script>\n    
+(function(){\n        if (window.matchMedia && 
+window.matchMedia(\'(prefers-reduced-motion: reduce)\').matches) return;\n     
+   try {\n            const els = document.querySelectorAll(\'.student-portal 
+.card, .teacher-portal .card, .portal-heading\');\n            if 
+(!els.length) return;\n            const io = new 
+IntersectionObserver((entries)=>{\n                entries.forEach(entry=>{\n  
+                  if (entry.isIntersecting) {\n                        const 
+el = entry.target;\n                        // staggered delay if present\n    
+                    const delay = parseFloat(el.dataset.delay || 0);\n         
+               setTimeout(()=> el.classList.add(\'active\'), Math.round(delay 
+* 1000));\n                        io.unobserve(el);\n                    }\n  
+              });\n            }, { threshold: 0.12 });\n            
+els.forEach((el, i)=>{\n                // assign small stagger when not 
+explicitly set\n                if (!el.dataset.delay) el.dataset.delay = (i % 
+6) * 0.06;\n                el.classList.add(\'reveal\');\n                
+io.observe(el);\n            });\n        } catch (e) { console.warn(\'reveal 
+init\', e); }\n    })();\n</script>\n\n</body>\n</html>\n'
+
+----------------------------------------------------------------------
+Ran 22 tests in 7.911s
+
+FAILED (failures=3, errors=1)
+Destroying test database for alias 'default' 
+('file:memorydb_default?mode=memory&cache=shared')...
+
+  Applying teachers.0002_teacherprofile_bio_teacherprofile_phone_number_and_more... OK
+System check identified no issues (0 silenced).

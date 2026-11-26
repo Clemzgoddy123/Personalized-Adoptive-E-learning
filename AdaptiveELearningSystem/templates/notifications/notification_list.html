@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+<h2>Notifications</h2>
+{% if notifications %}
+    <div class="list-group">
+        {% for notification in notifications %}
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ notification.get_notification_type_display }}</h5>
+                    <small>{{ notification.date_sent|date:'Y-m-d H:i' }}</small>
+                </div>
+                <p class="mb-1">{{ notification.message }}</p>
+                <p class="small">Status: {{ notification.read_status|yesno:'Read,Unread' }}</p>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">No notifications available.</div>
+{% endif %}
+{% endblock %}

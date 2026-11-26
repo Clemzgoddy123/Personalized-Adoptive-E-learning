@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load quiz_extras %}
+{% block title %}Quizzes{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Quizzes</h2>
+        <p class="text-muted">Browse quizzes or create a new quiz for your students.</p>
+    </div>
+    {% if teacher_profile %}
+        <a href="{% url 'teacher_quiz_create' %}" class="btn btn-success">Create Quiz</a>
+    {% endif %}
+</div>
+
+{% if quizzes %}
+    <div class="list-group">
+        {% for quiz in quizzes %}
+            <div class="list-group-item">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <div>
+                        <h5 class="mb-1">{{ quiz.title }}</h5>
+                        <p class="mb-1">Course: {{ quiz.course.title }}</p>
+                        <small class="text-muted">Duration: {{ quiz.duration_minutes }} minutes | Questions: {{ quiz.assigned_question_count }}</small>
+                    </div>
+                    <div class="text-end">
+                        <span class="badge bg-primary d-block mb-2">{{ quiz.total_marks }} marks</span>
+                        {% if student_profile %}
+                            {% if quiz.id in taken_quiz_ids %}
+                                <span class="badge bg-success d-block mb-2">Scored {{ student_results|dict_get:quiz.id|default:'--' }}</span>
+                                <a href="{% url 'student_take_quiz' quiz.id %}" class="btn btn-sm btn-outline-secondary">Retake</a>
+                            {% else %}
+                                <span class="badge bg-info d-block mb-2">New quiz</span>
+                                <a href="{% url 'student_take_quiz' quiz.id %}" class="btn btn-sm btn-primary">Take Quiz</a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">No quizzes are currently available.</div>
+{% endif %}
+{% endblock %}

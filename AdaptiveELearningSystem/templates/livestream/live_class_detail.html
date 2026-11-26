@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Live Class Details{% endblock %}
+{% block content %}
+<h2>{{ live_class.course.title }}</h2>
+<div class="card">
+    <div class="card-body">
+        <p><strong>Status:</strong> {{ live_class.get_status_display }}</p>
+        <p><strong>Scheduled:</strong> {{ live_class.scheduled_time|date:'Y-m-d H:i' }}</p>
+        <p><strong>Teacher:</strong> {{ live_class.teacher.user.get_full_name|default:live_class.teacher.user.username }}</p>
+        <p><strong>Meeting link:</strong> <a href="{{ live_class.meeting_link }}" target="_blank">{{ live_class.meeting_link }}</a></p>
+        <p class="text-muted">Share this link with students so they can join the class from the platform.</p>
+
+        <div class="mb-3">
+            <button id="copyLinkButton" class="btn btn-outline-secondary me-2" type="button" data-link="{{ live_class.meeting_link }}">Copy join link</button>
+            {% if can_start %}
+                <a href="{% url 'start_live_class' live_class.id %}" class="btn btn-success">Start class</a>
+            {% endif %}
+            {% if live_class.status == 'scheduled' %}
+                <a href="{% url 'cancel_live_class' live_class.id %}" class="btn btn-warning ms-2">Cancel class</a>
+            {% endif %}
+            {% if can_end %}
+                <a href="{% url 'end_live_class' live_class.id %}" class="btn btn-danger ms-2">End class & Record Attendance</a>
+            {% elif live_class.status == 'ongoing' %}
+                <span class="badge bg-success">Class is live</span>
+            {% else %}
+                <span class="badge bg-secondary">Class not started</span>
+            {% endif %}
+            {% if request.user.is_authenticated and request.user == live_class.teacher.user %}
+                {% if live_class.status == 'completed' or live_class.status == 'cancelled' %}
+                    <a href="{% url 'delete_live_class' live_class.id %}" class="btn btn-outline-danger ms-2" onclick="return confirm('Delete this live class link? This cannot be undone.')">Delete link</a>
+                {% endif %}
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <strong>Student join counter:</strong> {{ student_count }} enrolled student{{ student_count|pluralize }}
+        </div>
+
+        <a href="{{ live_class.meeting_link }}" class="btn btn-primary mb-3" target="_blank">Open in Jitsi</a>
+        <hr>
+        <div class="ratio ratio-16x9">
+            <iframe src="{{ embed_meeting_link }}" title="Embedded Jitsi live class" allow="camera; microphone; fullscreen; display-capture" allowfullscreen></iframe>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const button = document.getElementById('copyLinkButton');
+                if (!button) return;
+                button.addEventListener('click', function () {
+                    const link = button.dataset.link;
+                    navigator.clipboard.writeText(link).then(function () {
+                        button.textContent = 'Link copied!';
+                        button.classList.remove('btn-outline-secondary');
+                        button.classList.add('btn-outline-success');
+                        setTimeout(function () {
+                            button.textContent = 'Copy join link';
+                            button.classList.remove('btn-outline-success');
+                            button.classList.add('btn-outline-secondary');
+                        }, 2000);
+                    }).catch(function () {
+                        window.prompt('Copy the link manually:', link);
+                    });
+                });
+            });
+        </script>
+    </div>
+</div>
+{% endblock %}

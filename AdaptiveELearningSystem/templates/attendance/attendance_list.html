@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Records{% endblock %}
+{% block content %}
+<h2>Attendance Records</h2>
+{% if records %}
+    <table class="table table-bordered">
+        <thead>
+            <tr><th>Date</th><th>Course</th><th>Student</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+            {% for record in records %}
+                <tr>
+                    <td>{{ record.date }}</td>
+                    <td>{{ record.course.title }}</td>
+                    <td>{{ record.student.user.get_full_name|default:record.student.user.username }}</td>
+                    <td>{{ record.get_status_display }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="alert alert-info">No attendance records available.</div>
+{% endif %}
+{% endblock %}

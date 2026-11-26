@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.env
+.venv/
+
+# Django local files
+*.sqlite3
+db.sqlite3
+media/
+staticfiles/
+
+# Test and tooling output
+.pytest_cache/
+cover/
+htmlcov/
+.tox/
+.coverage
+coverage.xml
+junit.xml
+*.log

@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}Analytics Dashboard{% endblock %}
+
+{% block content %}
+<div class="py-4">
+    <div class="d-flex align-items-center justify-content-between mb-4">
+        <div>
+            <h1 class="display-6">Analytics Dashboard</h1>
+            <p class="text-muted">A quick overview of platform activity and usage.</p>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5>Total courses</h5>
+                <p class="display-6 mb-0">{{ total_courses }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5>Total students</h5>
+                <p class="display-6 mb-0">{{ total_students }}</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card p-4">
+                <h5>Total teachers</h5>
+                <p class="display-6 mb-0">{{ total_teachers }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card p-4">
+                <h6>Assignments</h6>
+                <p class="fs-3 mb-0">{{ total_assignments }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4">
+                <h6>Submissions</h6>
+                <p class="fs-3 mb-0">{{ total_submissions }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4">
+                <h6>Quizzes</h6>
+                <p class="fs-3 mb-0">{{ total_quizzes }}</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card p-4">
+                <h6>Attendance records</h6>
+                <p class="fs-3 mb-0">{{ total_attendance_records }}</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-lg-6">
+            <div class="card p-4">
+                <h5>Upcoming live classes</h5>
+                {% if upcoming_live_classes %}
+                    <ul class="list-group list-group-flush">
+                        {% for live_class in upcoming_live_classes %}
+                            <li class="list-group-item px-0 py-2">{{ live_class.course.title }} — {{ live_class.scheduled_time }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="text-muted">No live classes scheduled.</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card p-4">
+                <h5>Recent notifications</h5>
+                {% if recent_notifications %}
+                    <ul class="list-group list-group-flush">
+                        {% for notification in recent_notifications %}
+                            <li class="list-group-item px-0 py-2">{{ notification.message|truncatechars:80 }}</li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <div class="text-muted">No notifications yet.</div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

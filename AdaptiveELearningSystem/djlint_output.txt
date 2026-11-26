@@ -1,0 +1,401 @@
+﻿
+python : Checking 1/1 files
+At line:1 char:77
++ ... ingSystem"; python -m djlint templates/students/student_dashboard.htm ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Checking 1/1 files:String) [], Re 
+   moteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+
+student_dashboard.html
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+@@ -1,199 +1,191 @@
+
+ {% extends 'base.html' %}
+-
+ {% block title %}Student Dashboard{% endblock %}
+-
+ {% block extra_css %}
+-<style>
++    <style>
+   .student-portal { padding: 2rem 0; }
+   .profile-pic { width: 140px; height:140px; object-fit:cover; }
+-</style>
++    </style>
+ {% endblock %}
+-
+ {% block content %}
+-<div class="student-portal">
+-  <div class="d-flex justify-content-between align-items-center mb-4">
+-    <h2 class="mb-0">Student Dashboard</h2>
+-    <a href="{% url 'account_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
+-  </div>
+-
+-  {% if not student_profile %}
+-    <div class="alert alert-warning">Student profile not found. Please log in with a student account.</div>
+-  {% else %}
+-    <div class="row">
+-      <aside class="col-md-4">
+-        <div class="card mb-4">
+-          <div class="card-body text-center">
+-            {% if student_profile.profile_picture %}
+-              <img src="{{ student_profile.profile_picture.url }}" alt="Profile" class="rounded-circle profile-pic mb-3">
+-            {% else %}
+-              <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3" style="width:140px;height:140px;">No photo</div>
+-            {% endif %}
+-            <h5 class="card-title">{{ student_profile.user.get_full_name|default:student_profile.user.username }}</h5>
+-            <p class="mb-1"><strong>Class:</strong> {{ student_profile.class_level|default:'N/A' }}</p>
+-            <p class="mb-1"><strong>Phone:</strong> {{ student_profile.phone_number|default:'N/A' }}</p>
+-          </div>
++    <div class="student-portal">
++        <div class="d-flex justify-content-between align-items-center mb-4">
++            <h2 class="mb-0">Student Dashboard</h2>
++            <a href="{% url 'account_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
+         </div>
+-
+-        <div class="card mb-4">
+-          <div class="card-body">
+-            <h6 class="card-title">Enrolled Courses</h6>
+-            {% if enrollments %}
+-              <ul class="list-unstyled mb-0">
+-                {% for e in enrollments %}
+-                  <li><a href="{% url 'course_detail' e.course.id %}">{{ e.course.title }}</a></li>
+-                {% endfor %}
+-              </ul>
+-            {% else %}
+-              <div class="text-muted">No courses enrolled yet.</div>
+-            {% endif %}
+-          </div>
+-        </div>
+-      </aside>
+-
+-      <main class="col-md-8">
+-        <div class="card mb-4">
+-          <div class="card-body">
+-            <h6 class="card-title">Assignment Progress</h6>
+-            <div class="mb-2 small text-muted">Total due: {{ assignment_progress.total }} ΓÇö Submitted: {{ assignment_progress.completed }}</div>
+-            {% if assignment_progress.total and assignment_progress.total > 0 %}
+-              {% with percent=assignment_progress.percent|default:'0' %}
+-                <div class="progress mb-3" style="height:20px;">
+-                  <div class="progress-bar" role="progressbar" style="width: {{ percent }}%;" aria-valuenow="{{ percent }}" aria-valuemin="0" aria-valuemax="100">{{ percent }}%</div>
+-                </div>
+-              {% endwith %}
+-            {% else %}
+-              <div class="text-muted">No assignments</div>
+-            {% endif %}
+-
++        {% if not student_profile %}
++            <div class="alert alert-warning">Student profile not found. Please log in with a student account.</div>
++        {% else %}
+             <div class="row">
+-              <div class="col-sm-6">
+-                <p class="mb-1"><strong>Avg assignment:</strong> {% if performance_metrics.average_assignment_percent is not None %}{{ performance_metrics.average_assignment_percent }}%{% else %}N/A{% endif %}</p>
+-                <p class="mb-1"><strong>Avg quiz:</strong> {% if performance_metrics.average_quiz_percent is not None %}{{ performance_metrics.average_quiz_percent }}%{% else %}N/A{% endif %}</p>
+-              </div>
+-              <div class="col-sm-6">
+-                <p class="mb-1"><strong>Overall:</strong> {% if performance_metrics.overall_percent is not None %}{{ performance_metrics.overall_percent }}%{% else %}N/A{% endif %}</p>
+-                <p class="mb-0"><strong>Attendance:</strong> {% if performance_metrics.attendance_rate is not None %}{{ performance_metrics.attendance_rate }}%{% else %}N/A{% endif %}</p>
+-              </div>
++                <aside class="col-md-4">
++                    <div class="card mb-4">
++                        <div class="card-body text-center">
++                            {% if student_profile.profile_picture %}
++                                <img src="{{ student_profile.profile_picture.url }}"
++                                     alt="Profile"
++                                     class="rounded-circle profile-pic mb-3">
++                            {% else %}
++                                <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center mb-3"
++                                     style="width:140px;
++                                            height:140px">No photo</div>
++                            {% endif %}
++                            <h5 class="card-title">{{ student_profile.user.get_full_name|default:student_profile.user.username }}</h5>
++                            <p class="mb-1"><strong>Class:</strong> {{ student_profile.class_level|default:'N/A' }}</p>
++                            <p class="mb-1"><strong>Phone:</strong> {{ student_profile.phone_number|default:'N/A' }}</p>
++                        </div>
++                    </div>
++                    <div class="card mb-4">
++                        <div class="card-body">
++                            <h6 class="card-title">Enrolled Courses</h6>
++                            {% if enrollments %}
++                                <ul class="list-unstyled mb-0">
++                                    {% for e in enrollments %}
++                                        <li><a href="{% url 'course_detail' e.course.id %}">{{ e.course.title }}</a></li>
++                                    {% endfor %}
++                                </ul>
++                            {% else %}
++                                <div class="text-muted">No courses enrolled yet.</div>
++                            {% endif %}
++                        </div>
++                    </div>
++                </aside>
++                <main class="col-md-8">
++                    <div class="card mb-4">
++                        <div class="card-body">
++                            <h6 class="card-title">Assignment Progress</h6>
++                            <div class="mb-2 small text-muted">Total due: {{ assignment_progress.total }} ΓÇö Submitted: {{ assignment_progress.completed }}</div>
++                            {% if assignment_progress.total and assignment_progress.total > 0 %}
++                                {% with percent=assignment_progress.percent|default:'0' %}
++                                    <div class="progress mb-3" style="height:20px;">
++                                        <div class="progress-bar"
++                                             role="progressbar"
++                                             style="width: {{ percent }}%"
++                                             aria-valuenow="{{ percent }}"
++                                             aria-valuemin="0"
++                                             aria-valuemax="100">{{ percent }}%</div>
++                                    </div>
++                                {% endwith %}
++                            {% else %}
++                                <div class="text-muted">No assignments</div>
++                            {% endif %}
++                            <div class="row">
++                                <div class="col-sm-6">
++                                    <p class="mb-1"><strong>Avg assignment:</strong> {% if performance_metrics.average_assignment_percent is not None %}{{ performance_metrics.average_assignment_percent }}%{% else %}N/A{% endif %}</p>
++                                    <p class="mb-1"><strong>Avg quiz:</strong> {% if performance_metrics.average_quiz_percent is not None %}{{ performance_metrics.average_quiz_percent }}%{% else %}N/A{% endif %}</p>
++                                </div>
++                                <div class="col-sm-6">
++                                    <p class="mb-1"><strong>Overall:</strong> {% if performance_metrics.overall_percent is not None %}{{ performance_metrics.overall_percent }}%{% else %}N/A{% endif %}</p>
++                                    <p class="mb-0"><strong>Attendance:</strong> {% if performance_metrics.attendance_rate is not None %}{{ performance_metrics.attendance_rate }}%{% else %}N/A{% endif %}</p>
++                                </div>
++                            </div>
++                        </div>
++                    </div>
++                    <div class="row">
++                        <div class="col-md-6 mb-4">
++                            <div class="card h-100">
++                                <div class="card-body">
++                                    <h6 class="card-title">Assignment Trend</h6>
++                                    {% if has_assignment_trend %}
++                                        <canvas id="assignmentTrendChart"></canvas>
++                                    {% else %}
++                                        <div class="text-muted">No assignment trend data</div>
++                                    {% endif %}
++                                </div>
++                            </div>
++                        </div>
++                        <div class="col-md-6 mb-4">
++                            <div class="card h-100">
++                                <div class="card-body">
++                                    <h6 class="card-title">Quiz Trend</h6>
++                                    {% if has_quiz_trend %}
++                                        <canvas id="quizTrendChart"></canvas>
++                                    {% else %}
++                                        <div class="text-muted">No quiz trend data</div>
++                                    {% endif %}
++                                </div>
++                            </div>
++                        </div>
++                    </div>
++                    <div class="row">
++                        <div class="col-md-6 mb-4">
++                            <div class="card h-100">
++                                <div class="card-body">
++                                    <h6 class="card-title">Performance</h6>
++                                    <canvas id="studentPerformanceChart"></canvas>
++                                </div>
++                            </div>
++                        </div>
++                        <div class="col-md-6 mb-4">
++                            <div class="card h-100">
++                                <div class="card-body">
++                                    <h6 class="card-title">Attendance Trend</h6>
++                                    {% if attendance_trend.labels|length > 1 %}
++                                        <canvas id="attendanceTrendChart"></canvas>
++                                    {% else %}
++                                        <div class="text-muted">Not enough attendance data</div>
++                                    {% endif %}
++                                </div>
++                            </div>
++                        </div>
++                    </div>
++                    <div class="card mb-4">
++                        <div class="card-body">
++                            <h6 class="card-title">Upcoming Assignments</h6>
++                            {% if upcoming_assignments %}
++                                <ul class="list-group list-group-flush">
++                                    {% for a in upcoming_assignments %}
++                                        <li class="list-group-item d-flex justify-content-between align-items-center">
++                                            <div>
++                                                <div class="fw-bold">{{ a.title }}</div>
++                                                <div class="small text-muted">{{ a.course.title }} ΓÇó {{ a.deadline|date:'Y-m-d H:i' }}</div>
++                                            </div>
++                                            <div>
++                                                {% if a.id in submitted_assignment_ids %}
++                                                    <span class="badge bg-success">Submitted</span>
++                                                {% else %}
++                                                    <span class="badge bg-warning text-dark">Pending</span>
++                                                {% endif %}
++                                            </div>
++                                        </li>
++                                    {% endfor %}
++                                </ul>
++                            {% else %}
++                                <div class="text-muted">No upcoming assignments.</div>
++                            {% endif %}
++                        </div>
++                    </div>
++                    <div class="card mb-4">
++                        <div class="card-body">
++                            <h6 class="card-title">Recommendations</h6>
++                            {% if recommendations %}
++                                <ul class="list-group list-group-flush">
++                                    {% for rec in recommendations|slice:":3" %}
++                                        <li class="list-group-item">
++                                            <div class="fw-bold">{{ rec.title }}</div>
++                                            <div class="small text-muted">{{ rec.course_title }}</div>
++                                            <div class="mt-1">{{ rec.reason }}</div>
++                                        </li>
++                                    {% endfor %}
++                                </ul>
++                            {% else %}
++                                <div class="text-muted">No recommendations at the moment.</div>
++                            {% endif %}
++                        </div>
++                    </div>
++                </main>
+             </div>
+-          </div>
+-        </div>
+-
+-        <div class="row">
+-          <div class="col-md-6 mb-4">
+-            <div class="card h-100">
+-              <div class="card-body">
+-                <h6 class="card-title">Assignment Trend</h6>
+-                {% if has_assignment_trend %}
+-                  <canvas id="assignmentTrendChart"></canvas>
+-                {% else %}
+-                  <div class="text-muted">No assignment trend data</div>
+-                {% endif %}
+-              </div>
+-            </div>
+-          </div>
+-
+-          <div class="col-md-6 mb-4">
+-            <div class="card h-100">
+-              <div class="card-body">
+-                <h6 class="card-title">Quiz Trend</h6>
+-                {% if has_quiz_trend %}
+-                  <canvas id="quizTrendChart"></canvas>
+-                {% else %}
+-                  <div class="text-muted">No quiz trend data</div>
+-                {% endif %}
+-              </div>
+-            </div>
+-          </div>
+-        </div>
+-
+-        <div class="row">
+-          <div class="col-md-6 mb-4">
+-            <div class="card h-100">
+-              <div class="card-body">
+-                <h6 class="card-title">Performance</h6>
+-                <canvas id="studentPerformanceChart"></canvas>
+-              </div>
+-            </div>
+-          </div>
+-
+-          <div class="col-md-6 mb-4">
+-            <div class="card h-100">
+-              <div class="card-body">
+-                <h6 class="card-title">Attendance Trend</h6>
+-                {% if attendance_trend.labels|length > 1 %}
+-                  <canvas id="attendanceTrendChart"></canvas>
+-                {% else %}
+-                  <div class="text-muted">Not enough attendance data</div>
+-                {% endif %}
+-              </div>
+-            </div>
+-          </div>
+-        </div>
+-
+-        <div class="card mb-4">
+-          <div class="card-body">
+-            <h6 class="card-title">Upcoming Assignments</h6>
+-            {% if upcoming_assignments %}
+-              <ul class="list-group list-group-flush">
+-                {% for a in upcoming_assignments %}
+-                  <li class="list-group-item d-flex justify-content-between align-items-center">
+-                    <div>
+-                      <div class="fw-bold">{{ a.title }}</div>
+-                      <div class="small text-muted">{{ a.course.title }} ΓÇó {{ a.deadline|date:'Y-m-d H:i' }}</div>
+-                    </div>
+-                    <div>
+-                      {% if a.id in submitted_assignment_ids %}
+-                        <span class="badge bg-success">Submitted</span>
+-                      {% else %}
+-                        <span class="badge bg-warning text-dark">Pending</span>
+-                      {% endif %}
+-                    </div>
+-                  </li>
+-                {% endfor %}
+-              </ul>
+-            {% else %}
+-              <div class="text-muted">No upcoming assignments.</div>
+-            {% endif %}
+-          </div>
+-        </div>
+-
+-        <div class="card mb-4">
+-          <div class="card-body">
+-            <h6 class="card-title">Recommendations</h6>
+-            {% if recommendations %}
+-              <ul class="list-group list-group-flush">
+-                {% for rec in recommendations|slice:":3" %}
+-                  <li class="list-group-item">
+-                    <div class="fw-bold">{{ rec.title }}</div>
+-                    <div class="small text-muted">{{ rec.course_title }}</div>
+-                    <div class="mt-1">{{ rec.reason }}</div>
+-                  </li>
+-                {% endfor %}
+-              </ul>
+-            {% else %}
+-              <div class="text-muted">No recommendations at the moment.</div>
+-            {% endif %}
+-          </div>
+-        </div>
+-
+-      </main>
++        {% endif %}
+     </div>
+-  {% endif %}
+-</div>
+-
+ {% endblock %}
+-
+ {% block extra_js %}
+-  {{ student_assignment_trend.labels|json_script:'assignment-labels' }}
+-  {{ student_assignment_trend.scores|json_script:'assignment-scores' }}
+-  {{ student_quiz_trend.labels|json_script:'quiz-labels' }}
+-  {{ student_quiz_trend.scores|json_script:'quiz-scores' }}
+-  {{ student_performance_chart.labels|json_script:'performance-labels' }}
+-  {{ student_performance_chart.values|json_script:'performance-values' }}
+-  {{ attendance_trend.labels|json_script:'attendance-labels' }}
+-  {{ attendance_trend.scores|json_script:'attendance-scores' }}
+-
+-  <script>
++    {{ student_assignment_trend.labels|json_script:'assignment-labels' }}
++    {{ student_assignment_trend.scores|json_script:'assignment-scores' }}
++    {{ student_quiz_trend.labels|json_script:'quiz-labels' }}
++    {{ student_quiz_trend.scores|json_script:'quiz-scores' }}
++    {{ student_performance_chart.labels|json_script:'performance-labels' }}
++    {{ student_performance_chart.values|json_script:'performance-values' }}
++    {{ attendance_trend.labels|json_script:'attendance-labels' }}
++    {{ attendance_trend.scores|json_script:'attendance-scores' }}
++    <script>
+     const parseJson = id => {
+       const el = document.getElementById(id);
+       if (!el) return [];
+@@ -224,6 +216,5 @@
+
+       const att = document.getElementById('attendanceTrendChart');
+       if (att && attendanceLabels.length && attendanceScores.length) makeLine(att, attendanceLabels, attendanceScores, '#607274');
+     }
+-  </script>
+-
++    </script>
+ {% endblock %}
+
+1 file would be updated.
+

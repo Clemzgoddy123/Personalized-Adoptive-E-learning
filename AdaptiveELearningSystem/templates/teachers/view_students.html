@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block title %}My Students{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1">Students</h2>
+            {% if selected_course %}
+                <p class="text-muted mb-0">Enrolled in {{ selected_course.title }}</p>
+            {% else %}
+                <p class="text-muted mb-0">Students enrolled in your courses</p>
+            {% endif %}
+        </div>
+        <a href="{% url 'teacher_dashboard' %}" class="btn btn-outline-primary">Back to Dashboard</a>
+    </div>
+
+    {% if courses %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <form method="get" class="row g-2 align-items-end">
+                    <div class="col-md-8">
+                        <label for="course-filter" class="form-label fw-bold">Filter by course</label>
+                        <select id="course-filter" class="form-select" onchange="if (this.value) window.location.href=this.value;">
+                            <option value="{% url 'view_student' %}">All my courses</option>
+                            {% for course in courses %}
+                                <option value="{% url 'view_students_by_course' course.id %}" {% if selected_course.id == course.id %}selected{% endif %}>{{ course.title }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            {% if enrollments %}
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>Student</th>
+                                <th>Username</th>
+                                <th>Course</th>
+                                <th>Class Level</th>
+                                <th>Enrolled</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for enrollment in enrollments %}
+                                <tr>
+                                    <td>{{ enrollment.student.user.get_full_name|default:enrollment.student.user.username }}</td>
+                                    <td>{{ enrollment.student.user.username }}</td>
+                                    <td>{{ enrollment.course.title }}</td>
+                                    <td>{{ enrollment.student.class_level|default:'N/A' }}</td>
+                                    <td>{{ enrollment.enrollment_date|date:'Y-m-d' }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-secondary mb-0">No students are enrolled in {% if selected_course %}this course{% else %}your courses{% endif %} yet.</div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

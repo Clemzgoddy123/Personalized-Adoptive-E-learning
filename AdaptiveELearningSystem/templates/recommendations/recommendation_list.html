@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Recommendations{% endblock %}
+{% block content %}
+<h2>Recommendations</h2>
+{% if recommendations %}
+    <div class="list-group">
+        {% for recommendation in recommendations %}
+            <div class="list-group-item">
+                <h5 class="mb-1">{{ recommendation.title }}</h5>
+                <p class="mb-1"><strong>Course:</strong> {{ recommendation.course_title }}</p>
+                <p class="mb-1">{{ recommendation.reason }}</p>
+                {% if recommendation.recommended_material_title %}
+                    <p class="mb-1"><strong>Recommended material:</strong> {{ recommendation.recommended_material_title }}</p>
+                {% endif %}
+                <small class="text-muted">Generated on {{ recommendation.date_generated|default:'now' }}</small>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="alert alert-info">No recommendations have been generated yet.</div>
+{% endif %}
+{% endblock %}

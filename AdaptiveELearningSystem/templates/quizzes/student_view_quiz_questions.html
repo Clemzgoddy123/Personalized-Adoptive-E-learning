@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block title %}View Quiz Questions{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-body">
+                <h2>View quiz questions</h2>
+                <p class="text-muted">Course: {{ quiz.course.title }} &middot; Duration: {{ quiz.duration_minutes }} minutes</p>
+
+                {% if quiz_questions %}
+                    <div class="list-group">
+                        {% for quiz_question in quiz_questions %}
+                            <div class="list-group-item">
+                                <h5>{{ forloop.counter }}. {{ quiz_question.question.text }}</h5>
+                                <ul>
+                                    <li>A: {{ quiz_question.question.option_a }}</li>
+                                    <li>B: {{ quiz_question.question.option_b }}</li>
+                                    <li>C: {{ quiz_question.question.option_c }}</li>
+                                    <li>D: {{ quiz_question.question.option_d }}</li>
+                                </ul>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info">No questions have been added for this quiz yet.</div>
+                {% endif %}
+
+                <a href="{% url 'quiz_list' %}" class="btn btn-outline-secondary mt-3">Back to quizzes</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

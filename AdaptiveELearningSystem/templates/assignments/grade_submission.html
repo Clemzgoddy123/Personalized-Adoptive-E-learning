@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block title %}Grade Submission{% endblock %}
+{% block content %}
+<h2>Grade Submission</h2>
+<p><strong>Student:</strong> {{ submission.student.user.get_full_name|default:submission.student.user.username }}</p>
+<p><strong>Assignment:</strong> {{ submission.assignment.title }}</p>
+<p><strong>Course:</strong> <a href="{% url 'course_detail' submission.assignment.course.id %}">{{ submission.assignment.course.title }}</a></p>
+<p><strong>Submitted:</strong> {{ submission.submission_date|date:'Y-m-d H:i' }}</p>
+<p><strong>File submission:</strong>
+    {% if submission.submission_file %}
+        Submitted file available
+    {% else %}
+        No file submitted
+    {% endif %}
+</p>
+<p><strong>Score download:</strong> <a href="{% url 'download_submission_score' submission.id %}" class="btn btn-sm btn-outline-primary">Download score</a></p>
+
+{% if message %}
+    <div class="alert alert-danger">{{ message }}</div>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Score</label>
+        <input type="text" name="score" class="form-control" value="{{ submission.score }}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Feedback</label>
+        <textarea name="feedback" class="form-control" rows="4">{{ submission.feedback }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Grade</button>
+    <a href="{% url 'assignment_detail' submission.assignment.id %}" class="btn btn-secondary ms-2">Cancel</a>
+</form>
+{% endblock %}

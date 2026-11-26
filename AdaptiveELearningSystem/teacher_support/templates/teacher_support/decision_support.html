@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Teacher Decision Support</h1>
+
+  {% if error %}
+    <div class="error">{{ error }}</div>
+  {% endif %}
+
+  <p>Courses: {% for c in courses %}{{ c.title }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Avg Quiz</th>
+        <th>Avg Assignment</th>
+        <th>Attendance %</th>
+        <th>Completion %</th>
+        <th>Flags</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+        <tr {% if r.flags and r.flags.0 != 'Insufficient data' %}class="table-warning"{% endif %}>
+          <td>{{ r.student.user.get_full_name }} ({{ r.student.user.username }})</td>
+          <td>{% if r.avg_quiz is not None %}{{ r.avg_quiz }}{% else %}-{% endif %}</td>
+          <td>{% if r.avg_assignment is not None %}{{ r.avg_assignment }}{% else %}-{% endif %}</td>
+          <td>{% if r.attendance_pct is not None %}{{ r.attendance_pct }}%{% else %}-{% endif %}</td>
+          <td>{% if r.completion_pct is not None %}{{ r.completion_pct }}%{% else %}-{% endif %}</td>
+          <td>{% if r.flags %}{{ r.flags|join:", " }}{% else %}-{% endif %}</td>
+          <td>
+            {% if r.latest_submission %}
+              {% if request.user.is_authenticated and r.latest_submission.assignment.course.teacher.user.id == request.user.id %}
+                <a href="{% url 'grade_submission' r.latest_submission.id %}" class="btn btn-sm btn-primary">Grade</a>
+              {% endif %}
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr><td colspan="7">No students found for your courses.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

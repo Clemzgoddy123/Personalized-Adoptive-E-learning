@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Take Quiz{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="card">
+            <div class="card-body">
+                <h2>{{ quiz.title }}</h2>
+                <p class="text-muted">Course: {{ quiz.course.title }} &middot; Duration: {{ quiz.duration_minutes }} minutes</p>
+
+                {% if message %}
+                    <div class="alert alert-warning">{{ message }}</div>
+                {% endif %}
+
+                {% if existing_result and score is not defined %}
+                    <div class="alert alert-info">
+                        <h5>Previous attempt</h5>
+                        <p>Your last score for this quiz was <strong>{{ existing_result.score }}</strong> out of <strong>{{ quiz.total_marks }}</strong>.</p>
+                        <p class="mb-0">You may retake the quiz to improve your score.</p>
+                    </div>
+                {% endif %}
+
+                {% if score is not None %}
+                    <div class="alert alert-success">
+                        <h5>Quiz submitted</h5>
+                        <p>You scored <strong>{{ score }}</strong> out of <strong>{{ total_marks }}</strong>.</p>
+                    </div>
+                {% endif %}
+
+                {% if form %}
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        {% for field in form %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <h5 class="mb-0">{{ forloop.counter }}. {{ field.label }}</h5>
+                                        <span class="badge bg-secondary">{{ field.name|slice:'9:'|upper }}</span>
+                                    </div>
+                                    <div class="mb-3">
+                                        {{ field }}
+                                    </div>
+                                    {% if field.errors %}
+                                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">Submit Answers</button>
+                            <a href="{% url 'quiz_list' %}" class="btn btn-outline-secondary">Back to quizzes</a>
+                        </div>
+                    </form>
+                {% else %}
+                    <a href="{% url 'quiz_list' %}" class="btn btn-secondary">Back to quizzes</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

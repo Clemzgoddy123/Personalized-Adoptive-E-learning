@@ -1,0 +1,485 @@
+{% extends 'base.html' %}
+{% block title %}Teacher Dashboard{% endblock %}
+{% block extra_css %}
+<style>
+    .teacher-portal { padding: 2.5rem 0 3rem; }
+    .teacher-portal .portal-heading { animation: portal-rise .65s both; }
+    .teacher-portal .card { animation: portal-rise .65s both; transition: transform .25s ease, box-shadow .25s ease; }
+    .teacher-portal .card:hover { transform: translateY(-4px); box-shadow: 0 16px 32px rgba(23,43,45,.11); }
+    .teacher-portal .col-md-4 .card:nth-child(1) { animation-delay: .08s; }
+    .teacher-portal .col-md-4 .card:nth-child(2) { animation-delay: .16s; }
+    .teacher-portal .col-md-8 > .card:nth-child(1) { animation-delay: .22s; }
+    .teacher-portal .col-md-8 > .card:nth-child(2) { animation-delay: .3s; }
+    .teacher-portal .col-md-8 > .row { animation: portal-rise .65s .38s both; }
+    .teacher-portal .col-md-8 > .card:nth-last-child(2) { animation-delay: .46s; }
+    .teacher-portal .col-md-8 > .card:last-child { animation-delay: .54s; }
+    .teacher-portal .btn { transition: transform .2s ease, box-shadow .2s ease; }
+    .teacher-portal .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 16px rgba(11,119,116,.16); }
+    @keyframes portal-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+{% endblock %}
+{% block content %}
+<div class="teacher-portal">
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="portal-heading float-subtle mb-0">Teacher Dashboard</h2>
+    <a href="{% url 'account_profile' %}" class="btn btn-outline-primary">Edit Profile</a>
+</div>
+{% if teacher_profile %}
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4" data-delay="0.06">
+                <div class="card-body text-center">
+                    {% if teacher_profile.profile_picture %}
+                        <img src="{{ teacher_profile.profile_picture.url }}" class="rounded-circle mb-3" alt="Profile picture" style="width: 160px; height: 160px; object-fit: cover;">
+                    {% else %}
+                        <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mb-3" style="width: 160px; height: 160px;">
+                            <span class="text-muted">No photo</span>
+                        </div>
+                    {% endif %}
+                    <h5 class="card-title">{{ teacher_profile.user.get_full_name|default:teacher_profile.user.username }}</h5>
+                    <p class="mb-1"><strong>Specialization:</strong> {{ teacher_profile.subject_specialization|default:'N/A' }}</p>
+                    <p class="mb-1"><strong>Qualification:</strong> {{ teacher_profile.qualification|default:'N/A' }}</p>
+                    <p class="mb-1"><strong>Phone:</strong> {{ teacher_profile.phone_number|default:'N/A' }}</p>
+                </div>
+            </div>
+            <div class="card mb-4" data-delay="0.12">
+                <div class="card-body">
+                    <h5 class="card-title">Quick Stats</h5>
+                    <p><strong>Courses:</strong> {{ course_count }}</p>
+                    <p><strong>Unique students:</strong> {{ unique_student_count }}</p>
+                    <p><strong>Unread notifications:</strong> <span class="badge bg-info text-dark badge-pulse">{{ unread_notifications }}</span></p>
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="{% url 'teacher_quiz_create' %}" class="btn btn-success">Create a Quiz</a>
+                        <a href="{% url 'upload_learning_material' %}" class="btn btn-outline-success">Upload Learning Materials</a>
+                        <a href="{% url 'upload_learning_material' %}?type=video" class="btn btn-outline-info">Tutorials</a>
+                        <a href="{% url 'quiz_list' %}" class="btn btn-outline-primary">View Quizzes</a>
+                        <a href="{% url 'view_student' %}" class="btn btn-primary">View Students</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card mb-4" data-delay="0.18">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0"><span class="ping me-2" aria-hidden="true"></span>Upcoming Assignments</h5>
+                        <small>{{ upcoming_assignments|length }} due soon</small>
+                    </div>
+                    {% if upcoming_assignments %}
+                        <div class="list-group">
+                            {% for assignment in upcoming_assignments %}
+                                <div class="list-group-item">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ assignment.title }}</h6>
+                                        <small>{{ assignment.deadline|date:'Y-m-d H:i' }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ assignment.course.title }}</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">No upcoming assignments.</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Pending Submissions</h5>
+                        <small>{{ pending_submissions|length }} pending</small>
+                    </div>
+                    {% if pending_submissions %}
+                        <div class="list-group">
+                            {% for submission in pending_submissions %}
+                                <a href="{% url 'grade_submission' submission.id %}" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ submission.assignment.title }}</h6>
+                                        <small>{{ submission.submission_date|date:'Y-m-d H:i' }}</small>
+                                    </div>
+                                    <p class="mb-1">{{ submission.student.user.get_full_name|default:submission.student.user.username }}</p>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">No pending submissions.</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Upcoming Live Classes</h5>
+                            {% if upcoming_live_classes %}
+                                <div class="list-group">
+                                    {% for live_class in upcoming_live_classes %}
+                                        <a href="{% url 'live_class_detail' live_class.id %}" class="list-group-item list-group-item-action">
+                                            {{ live_class.course.title }} — {{ live_class.scheduled_time|date:'Y-m-d H:i' }}
+                                        </a>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="alert alert-secondary mb-0">No live classes scheduled.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h5 class="card-title">Recent Attendance</h5>
+                            {% if recent_attendance %}
+                                <ul class="list-group list-group-flush">
+                                    {% for record in recent_attendance %}
+                                        <li class="list-group-item">
+                                            {{ record.course.title }} — {{ record.date|date:'Y-m-d' }}<br>
+                                            <small>{{ record.student.user.get_full_name|default:record.student.user.username }} — {{ record.get_status_display }}</small>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            {% else %}
+                                <div class="alert alert-secondary mb-0">No attendance records.</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Course Performance Metrics</h5>
+                    {% if course_metrics %}
+                        <ul class="list-group list-group-flush mb-3">
+                            {% for metric in course_metrics %}
+                                <li class="list-group-item">
+                                    <h6 class="mb-1">{{ metric.course.title }}</h6>
+                                    <p class="mb-1">Assignment avg: {{ metric.assignment_average|default:'N/A' }}% | Quiz avg: {{ metric.quiz_average|default:'N/A' }}% | Attendance: {{ metric.attendance_rate|default:'N/A' }}%</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">No course metrics available yet.</div>
+                    {% endif %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">Teacher Performance Summary</h6>
+                                    <canvas id="teacherPerformanceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">Course Completion Rate</h6>
+                                    <div class="progress mb-2" style="height: 22px;">
+                                        <div id="teacher-course-completion-bar" class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                    </div>
+                                    <p class="mb-0 text-muted">Based on graded assignments across your courses.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">Assignment Performance Chart</h6>
+                                    <canvas id="teacherAssignmentPerformanceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">Quiz Performance Chart</h6>
+                                    <canvas id="teacherQuizPerformanceChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        {% if teacher_course_chart_available %}
+                            <canvas id="teacherCourseChart"></canvas>
+                        {% else %}
+                            <div class="alert alert-secondary mb-0">No course analytics available yet.</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Uploaded Learning Materials</h5>
+                    {% if uploaded_learning_materials %}
+                        <ul class="list-group list-group-flush">
+                            {% for material in uploaded_learning_materials %}
+                                <li class="list-group-item">
+                                    <div class="fw-bold">{{ material.title }}</div>
+                                    <div class="small text-muted">{{ material.course.title }} • {{ material.get_material_type_display }}</div>
+                                    {% if material.material_type == 'video' and material.file_path %}
+                                        <div class="mt-2">
+                                            <a href="{{ material.file_path.url }}" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener">Open video</a>
+                                            <a href="{% url 'delete_learning_material' material.id %}" class="btn btn-sm btn-outline-danger ms-2" onclick="return confirm('Delete this video for all students?');">Delete</a>
+                                        </div>
+                                    {% elif material.file_path %}
+                                        <div class="mt-2">
+                                            <a href="{{ material.file_path.url }}" class="btn btn-sm btn-outline-secondary" target="_blank" rel="noopener">Open file</a>
+                                        </div>
+                                    {% endif %}
+                                    {% if material.message_text %}
+                                        <div class="mt-2 small text-muted">{{ material.message_text }}</div>
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">No learning materials uploaded yet.</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Video Completion Overview</h5>
+                    {% if video_completion_stats %}
+                        <ul class="list-group list-group-flush">
+                            {% for stat in video_completion_stats %}
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span>{{ stat.material.title }}</span>
+                                        <span class="badge bg-info text-dark">{{ stat.percent_complete }}%</span>
+                                    </div>
+                                    <div class="small text-muted">{{ stat.completed_count }} of {{ stat.total_students }} students completed</div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">No video completion data yet.</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Recommendations</h5>
+                    {% if recommendations %}
+                        <ul class="list-group list-group-flush mb-3">
+                            {% for recommendation in recommendations|slice:":3" %}
+                                <li class="list-group-item">
+                                    <h6 class="mb-1">{{ recommendation.title }}</h6>
+                                    <p class="mb-1">{{ recommendation.reason }}</p>
+                                    <small class="text-muted">{{ recommendation.date_generated|default:'now' }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <a href="{% url 'recommendation_list' %}" class="btn btn-outline-primary btn-sm">View all recommendations</a>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">No recommendations available yet.</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Low Performing Students</h5>
+                    {% if low_performing_students %}
+                        <ul class="list-group list-group-flush mb-3">
+                            {% for student in low_performing_students %}
+                                <li class="list-group-item">
+                                    <h6 class="mb-1">{{ student.student.user.get_full_name|default:student.student.user.username }}</h6>
+                                    <p class="mb-0">Average score: {{ student.average_percent }}%</p>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">No low-performing students identified at this time.</div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Notifications</h5>
+                    {% if notifications %}
+                        <ul class="list-group list-group-flush">
+                            {% for notification in notifications %}
+                                <li class="list-group-item">
+                                    <span class="badge bg-{{ notification.notification_type }} text-capitalize">{{ notification.get_notification_type_display }}</span>
+                                    <p class="mb-1">{{ notification.message }}</p>
+                                    <small class="text-muted">{{ notification.date_sent|date:'Y-m-d H:i' }}</small>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <div class="alert alert-secondary mb-0">No notifications yet.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-warning">Teacher profile not found. Please log in with a teacher account.</div>
+{% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ teacher_chart_data|json_script:"teacher-chart-data" }}
+<script>
+    const teacherChartData = JSON.parse(document.getElementById('teacher-chart-data').textContent);
+    const teacherCourseLabels = teacherChartData.course_labels;
+    const teacherAssignmentAverages = teacherChartData.assignment_averages;
+    const teacherQuizAverages = teacherChartData.quiz_averages;
+    const teacherAttendanceRates = teacherChartData.attendance_rates;
+
+    if (teacherCourseLabels.length) {
+        const ctx = document.getElementById('teacherCourseChart');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: teacherCourseLabels,
+                    datasets: [
+                        {
+                            label: 'Assignment Avg',
+                            data: teacherAssignmentAverages,
+                            borderColor: '#0b7774',
+                            backgroundColor: 'rgba(11,119,116,0.15)',
+                            fill: false,
+                            tension: 0.35,
+                        },
+                        {
+                            label: 'Quiz Avg',
+                            data: teacherQuizAverages,
+                            borderColor: '#ef765e',
+                            backgroundColor: 'rgba(239,118,94,0.15)',
+                            fill: false,
+                            tension: 0.35,
+                        },
+                        {
+                            label: 'Attendance %',
+                            data: teacherAttendanceRates,
+                            borderColor: '#607274',
+                            backgroundColor: 'rgba(96,114,116,0.15)',
+                            fill: false,
+                            tension: 0.35,
+                        },
+                    ],
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { position: 'top' } },
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                },
+            });
+        }
+    }
+
+    const teacherPerformanceLabels = teacherChartData.performance_labels;
+    const teacherPerformanceValues = teacherChartData.performance_values;
+    const teacherAssignmentLabels = teacherChartData.course_labels;
+    const teacherAssignmentValues = teacherChartData.assignment_averages;
+    const teacherQuizLabels = teacherChartData.course_labels;
+    const teacherQuizValues = teacherChartData.quiz_averages;
+    const teacherAttendanceLabels = teacherChartData.attendance_labels;
+    const teacherAttendanceScores = teacherChartData.attendance_scores;
+
+    if (teacherPerformanceLabels.length) {
+        const ctxTP = document.getElementById('teacherPerformanceChart');
+        if (ctxTP) {
+            new Chart(ctxTP, {
+                type: 'bar',
+                data: {
+                    labels: teacherPerformanceLabels,
+                    datasets: [{
+                        label: 'Average',
+                        data: teacherPerformanceValues,
+                        backgroundColor: ['#0b7774', '#ef765e', '#607274'],
+                        borderRadius: 10,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                },
+            });
+        }
+    }
+
+    if (teacherAssignmentLabels.length) {
+        const ctxTA = document.getElementById('teacherAssignmentPerformanceChart');
+        if (ctxTA) {
+            new Chart(ctxTA, {
+                type: 'bar',
+                data: {
+                    labels: teacherAssignmentLabels,
+                    datasets: [{
+                        label: 'Assignment Avg',
+                        data: teacherAssignmentValues,
+                        backgroundColor: '#0b7774',
+                        borderRadius: 10,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                },
+            });
+        }
+    }
+
+    if (teacherQuizLabels.length) {
+        const ctxTQ = document.getElementById('teacherQuizPerformanceChart');
+        if (ctxTQ) {
+            new Chart(ctxTQ, {
+                type: 'bar',
+                data: {
+                    labels: teacherQuizLabels,
+                    datasets: [{
+                        label: 'Quiz Avg',
+                        data: teacherQuizValues,
+                        backgroundColor: '#ef765e',
+                        borderRadius: 10,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                },
+            });
+        }
+    }
+
+    if (teacherAttendanceLabels.length) {
+        const ctxTA = document.getElementById('teacherAttendanceTrendChart');
+        if (ctxTA) {
+            new Chart(ctxTA, {
+                type: 'line',
+                data: {
+                    labels: teacherAttendanceLabels,
+                    datasets: [{
+                        label: 'Attendance Trend',
+                        data: teacherAttendanceScores,
+                        borderColor: '#607274',
+                        backgroundColor: 'rgba(96,114,116,0.15)',
+                        fill: true,
+                        tension: 0.35,
+                    }],
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100 } },
+                },
+            });
+        }
+    }
+
+    const completionBar = document.getElementById('teacher-course-completion-bar');
+    if (completionBar) {
+        const completionRate = Number(teacherChartData.completion_rate || 0);
+        completionBar.style.width = `${completionRate}%`;
+        completionBar.setAttribute('aria-valuenow', completionRate);
+        completionBar.textContent = `${completionRate}%`;
+    }
+</script>
+{% endblock %}
